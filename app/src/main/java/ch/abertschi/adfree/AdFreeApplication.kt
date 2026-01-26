@@ -8,20 +8,16 @@ package ch.abertschi.adfree
 
 import android.app.Activity
 import android.app.Application
-import android.content.Context
 import android.os.AsyncTask
 import ch.abertschi.adfree.ad.AdDetector
+import ch.abertschi.adfree.crashhandler.CrashExceptionHandler
+import ch.abertschi.adfree.model.*
 import ch.abertschi.adfree.plugin.AdPlugin
 import ch.abertschi.adfree.plugin.PluginHandler
-import ch.abertschi.adfree.plugin.interdimcable.InterdimCablePlugin
 import ch.abertschi.adfree.plugin.localmusic.LocalMusicPlugin
 import ch.abertschi.adfree.plugin.mute.MutePlugin
 import ch.abertschi.adfree.util.NotificationUtils
 import org.jetbrains.anko.AnkoLogger
-import ch.abertschi.adfree.crashhandler.CrashExceptionHandler
-import ch.abertschi.adfree.model.*
-import com.thoughtworks.xstream.mapper.Mapper
-import java.lang.NullPointerException
 
 
 /**

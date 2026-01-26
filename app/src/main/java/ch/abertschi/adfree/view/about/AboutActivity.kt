@@ -18,7 +18,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import ch.abertschi.adfree.BuildConfig
 import ch.abertschi.adfree.R
 import ch.abertschi.adfree.di.AboutModul
 import ch.abertschi.adfree.presenter.AboutPresenter
@@ -34,8 +33,10 @@ class AboutActivity : Fragment(), AboutView {
     lateinit var typeFace: Typeface
     lateinit var presenter: AboutPresenter
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater?.inflate(R.layout.about_view, container, false)
     }
 
@@ -46,23 +47,27 @@ class AboutActivity : Fragment(), AboutView {
 
         presenter = AboutModul(this.activity!!, this).provideAboutPresenter()
 
-        val textView = view?.findViewById(R.id.authorTitle) as TextView
+        val textView: TextView = view?.findViewById(R.id.authorTitle)!!
         textView.typeface = typeFace
         val text =
-                "built with much &lt;3 by <font color=#FFFFFF>abertschi</font>. " +
-                        "get my latest hacks and follow me on twitter."
+            "built with much &lt;3 by <font color=#FFFFFF>abertschi</font>. " +
+                    "get my latest hacks and follow me on twitter."
 
         textView?.text = Html.fromHtml(text)
 
         view.findViewById<ImageView>(R.id.twitter).onClick {
-            val browserIntent = Intent(Intent.ACTION_VIEW,
-                    Uri.parse("https://twitter.com/andrinbertschi?rel=adfree"))
+            val browserIntent = Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse("https://twitter.com/andrinbertschi?rel=adfree")
+            )
             this.context!!.startActivity(browserIntent)
         }
 
         view.findViewById<ImageView>(R.id.website).onClick {
-            val browserIntent = Intent(Intent.ACTION_VIEW,
-                    Uri.parse("http://abertschi.ch?rel=adfree"))
+            val browserIntent = Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse("http://abertschi.ch?rel=adfree")
+            )
             this.context!!.startActivity(browserIntent)
         }
 

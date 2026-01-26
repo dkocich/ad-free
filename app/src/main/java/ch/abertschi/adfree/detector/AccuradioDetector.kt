@@ -3,7 +3,6 @@ package ch.abertschi.adfree.detector
 import android.annotation.SuppressLint
 import android.widget.RemoteViews
 import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.info
 import org.jetbrains.anko.warn
 import kotlin.reflect.jvm.internal.impl.load.kotlin.JvmType
 
@@ -76,7 +75,9 @@ class AccuradioDetector : AdDetectable, AnkoLogger, AbstractNotificationDetector
                         if (value !is CharSequence) {
                             continue
                         }
-                        if (value.toString().trim().toLowerCase().contains("music will resume shortly")) {
+                        if (value.toString().trim().toLowerCase()
+                                .contains("music will resume shortly")
+                        ) {
                             return true
                         }
                     }
@@ -96,9 +97,9 @@ class AccuradioDetector : AdDetectable, AnkoLogger, AbstractNotificationDetector
 
         for (v in listOf(contentView, bigView, tickerView)) {
             if (inspectContentViews(v)) {
-                return true;
+                return true
             }
         }
-        return false;
+        return false
     }
 }

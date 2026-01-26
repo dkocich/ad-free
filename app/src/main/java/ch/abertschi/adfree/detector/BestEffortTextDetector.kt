@@ -1,7 +1,5 @@
 package ch.abertschi.adfree.detector
 
-import java.lang.IllegalStateException
-
 class BestEffortTextDetector : AbstractNotificationBundleAndroidTextDetector() {
 
     open override fun canHandle(payload: AdPayload): Boolean {

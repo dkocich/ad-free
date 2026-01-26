@@ -6,9 +6,14 @@
 
 package ch.abertschi.adfree.plugin.localmusic
 
+import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build.VERSION
+import android.provider.DocumentsContract
+import android.support.v4.content.ContextCompat.checkSelfPermission
 import android.view.View
 import ch.abertschi.adfree.AdFreeApplication
 import ch.abertschi.adfree.AudioController
@@ -21,26 +26,21 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.error
 import org.jetbrains.anko.info
 import java.io.File
 import java.util.*
 import java.util.concurrent.TimeUnit
-import android.provider.DocumentsContract
-import java.lang.Exception
-import android.Manifest.permission.READ_EXTERNAL_STORAGE
-import android.content.pm.PackageManager
-import android.os.Build.VERSION
-import android.support.v4.content.ContextCompat.checkSelfPermission
 
 
 /**
  * Created by abertschi on 01.05.17.
  */
-class LocalMusicPlugin(val context: Context,
-                       val prefs: PreferencesFactory,
-                       val audioController: AudioController,
-                       val yesNoModel: YesNoModel) : AdPlugin, AnkoLogger {
+class LocalMusicPlugin(
+    val context: Context,
+    val prefs: PreferencesFactory,
+    val audioController: AudioController,
+    val yesNoModel: YesNoModel
+) : AdPlugin, AnkoLogger {
 
     private val supportedFileExt = listOf(".mp3", ".wav", ".m4a")
     private var view: LocalMusicView? = null
@@ -73,16 +73,18 @@ class LocalMusicPlugin(val context: Context,
             runAndCatchException {
                 player.play(file.absolutePath, prefs.getLoopMusicPlayback())
                 Observable.just(true).delay(1000, TimeUnit.MILLISECONDS)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread()).subscribe {
-                            val content = when (prefs.getPlayUntilEnd()) {
-                                true -> "playing until end - touch to stop"
-                                else -> "touch to unmute ad"
-                            }
-
-                            ad.notificationChannel.updateAdNotification(title = name,
-                                    content = content)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread()).subscribe {
+                        val content = when (prefs.getPlayUntilEnd()) {
+                            true -> "playing until end - touch to stop"
+                            else -> "touch to unmute ad"
                         }
+
+                        ad.notificationChannel.updateAdNotification(
+                            title = name,
+                            content = content
+                        )
+                    }
             }
         }
     }
@@ -164,9 +166,11 @@ class LocalMusicPlugin(val context: Context,
 
     fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == PICK_DIRECTORY && resultCode == Activity.RESULT_OK) {
-            val uri = data?.getData()
-            val docUri = DocumentsContract.buildDocumentUriUsingTree(uri,
-                    DocumentsContract.getTreeDocumentId(uri))
+            val uri = data?.data
+            val docUri = DocumentsContract.buildDocumentUriUsingTree(
+                uri,
+                DocumentsContract.getTreeDocumentId(uri)
+            )
 
             var path: String? = null
             try {
@@ -184,7 +188,7 @@ class LocalMusicPlugin(val context: Context,
         }
     }
 
-    private fun runAndCatchException(function: () -> Unit): Unit {
+    private fun runAndCatchException(function: () -> Unit) {
         try {
             function()
         } catch (e: Throwable) {
@@ -228,7 +232,8 @@ class LocalMusicPlugin(val context: Context,
     private fun hasStoragePermissions(): Boolean {
         return if (VERSION.SDK_INT >= 23) {
             if (checkSelfPermission(context, READ_EXTERNAL_STORAGE)
-                    == PackageManager.PERMISSION_GRANTED) {
+                == PackageManager.PERMISSION_GRANTED
+            ) {
                 true
             } else {
                 info("Permission is revoked")

@@ -14,7 +14,7 @@ import org.jetbrains.anko.info
 /**
  * Created by abertschi on 15.04.17.
  */
-open class TrackRepository: AnkoLogger {
+open class TrackRepository : AnkoLogger {
 
     private val context: Context
     private val TRACKS: String = "tracks"

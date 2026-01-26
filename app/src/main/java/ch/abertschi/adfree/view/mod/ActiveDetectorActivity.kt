@@ -1,26 +1,20 @@
 package ch.abertschi.adfree.view.mod
 
-import android.opengl.Visibility
+
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.text.Html
-
-import android.widget.TextView
-
-
-import android.view.LayoutInflater
-import ch.abertschi.adfree.R
-import org.jetbrains.anko.*
-
-import android.support.v7.widget.RecyclerView
-import android.view.ViewGroup
-
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SwitchCompat
+import android.text.Html
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ScrollView
+import android.widget.TextView
+import ch.abertschi.adfree.R
 import ch.abertschi.adfree.detector.AdDetectable
-import java.lang.IllegalStateException
+import org.jetbrains.anko.*
 
 class ActiveDetectorActivity : AppCompatActivity(), AnkoLogger {
 
@@ -39,7 +33,7 @@ class ActiveDetectorActivity : AppCompatActivity(), AnkoLogger {
         presenter = ActiveDetectorPresenter(this)
 
         val category: String = intent.extras.getString(CategoriesPresenter.BUNDLE_CATEGORY_KEY)
-            ?: throw  IllegalStateException("must set category")
+            ?: throw IllegalStateException("must set category")
 
         val text =
             "fine-tune detectors for <font color=#FFFFFF>$category</font>."
@@ -83,8 +77,8 @@ class DetectorAdapter(
 
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.mod_active_detectors_view_element, parent, false)
-        val title = view.findViewById(R.id.det_title) as TextView
-        val subtitle = view.findViewById(R.id.det_subtitle) as TextView
+        val title: TextView = view.findViewById(R.id.det_title)
+        val subtitle: TextView = view.findViewById(R.id.det_subtitle)
         val switch = view.findViewById<TextView>(R.id.det_switch) as SwitchCompat
         val sep = view.findViewById<View>(R.id.mod_det_seperation)
         return MyViewHolder(view, title, subtitle, switch, sep)

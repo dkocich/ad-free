@@ -6,7 +6,11 @@
 
 package ch.abertschi.adfree.util
 
-import android.app.*
+import android.app.IntentService
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -14,8 +18,6 @@ import android.support.annotation.RequiresApi
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationManagerCompat
 import ch.abertschi.adfree.R
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.info
 
 
 /**
@@ -23,7 +25,7 @@ import org.jetbrains.anko.info
  */
 class NotificationUtils(val context: Context) : AnkoLogger {
 
-    public companion object {
+    companion object {
         val actionDismiss = "actionDismiss"
         val blockingNotificationId = 1
         val textgNotificationId = 2
@@ -52,20 +54,24 @@ class NotificationUtils(val context: Context) : AnkoLogger {
     }
 
 
-    fun showTextNotification(id: Int, title: String, content: String = "",
-                             dismissCallable: () -> Unit = {},
-                             priority: Int = NotificationCompat.PRIORITY_DEFAULT, notifiy: Boolean = true): Notification {
+    fun showTextNotification(
+        id: Int, title: String, content: String = "",
+        dismissCallable: () -> Unit = {},
+        priority: Int = NotificationCompat.PRIORITY_DEFAULT, notifiy: Boolean = true
+    ): Notification {
 
         val dismissIntent = PendingIntent
-                .getService(context, 0, Intent(context
-                        , NotificationInteractionService::class.java).setAction(actionDismiss)
-                        , PendingIntent.FLAG_ONE_SHOT)
+            .getService(
+                context, 0, Intent(
+                    context, NotificationInteractionService::class.java
+                ).setAction(actionDismiss), PendingIntent.FLAG_ONE_SHOT
+            )
 
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
-                .setContentTitle(title)
-                .setSmallIcon(R.mipmap.adfree_logo)
-                .setPriority(priority)
-                .setContentIntent(dismissIntent)
+            .setContentTitle(title)
+            .setSmallIcon(R.mipmap.adfree_logo)
+            .setPriority(priority)
+            .setContentIntent(dismissIntent)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             builder.setSmallIcon(R.drawable.ic_icon_logo)
@@ -128,7 +134,7 @@ class NotificationUtils(val context: Context) : AnkoLogger {
     @RequiresApi(Build.VERSION_CODES.O)
     private fun createChannel() {
         val notificationManager = context
-                .getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            .getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val id = CHANNEL_ID
         val name = "Ad blocking"
         val description = "Ad blocking notification"
@@ -142,7 +148,7 @@ class NotificationUtils(val context: Context) : AnkoLogger {
     }
 
     class NotificationInteractionService :
-            IntentService(NotificationInteractionService::class.simpleName), AnkoLogger {
+        IntentService(NotificationInteractionService::class.simpleName), AnkoLogger {
         init {
             info("NotificationInteractionService created")
         }

@@ -7,31 +7,30 @@
 package ch.abertschi.adfree
 
 import android.app.Notification
-import android.content.Context
-import android.support.v4.app.NotificationManagerCompat
 import ch.abertschi.adfree.model.PreferencesFactory
 import ch.abertschi.adfree.util.NotificationUtils
-import android.support.v4.content.ContextCompat.startActivity
-import android.content.Intent
-import ch.abertschi.adfree.view.mod.ModActivity
 
 
 /**
  * Created by abertschi on 01.09.17.
  */
-class NotificationChannel(val notificationUtils: NotificationUtils,
-                          val prefs: PreferencesFactory) {
+class NotificationChannel(
+    val notificationUtils: NotificationUtils,
+    val prefs: PreferencesFactory
+) {
 
     private val defaultAdNotificationId: Int = 1000
     private val alwaysOnNotificationId: Int = 1001
 
     fun buildAlwaysOnNotification(): Pair<Notification, Int> {
-        val not = notificationUtils.showTextNotification(alwaysOnNotificationId,
-                "ad-free",
-                "Enjoy ad-free music", {
-            }, notifiy = false)
+        val not = notificationUtils.showTextNotification(
+            alwaysOnNotificationId,
+            "ad-free",
+            "Enjoy ad-free music", {
+            }, notifiy = false
+        )
 
-        return Pair(not , alwaysOnNotificationId)
+        return Pair(not, alwaysOnNotificationId)
     }
 
     fun hideAlwaysOnNotification() {
@@ -43,11 +42,13 @@ class NotificationChannel(val notificationUtils: NotificationUtils,
     }
 
     fun showDefaultAdNotification(dismissCallable: () -> Unit = {}) {
-        notificationUtils.showTextNotification(defaultAdNotificationId, "Advertisement detected",
-                "touch to unmute", dismissCallable)
+        notificationUtils.showTextNotification(
+            defaultAdNotificationId, "Advertisement detected",
+            "touch to unmute", dismissCallable
+        )
     }
 
-    fun updateAdNotification(title: String? = null, content: String? = null ) {
+    fun updateAdNotification(title: String? = null, content: String? = null) {
         notificationUtils.updateTextNotificationIfAvailable(defaultAdNotificationId, title, content)
     }
 

@@ -3,7 +3,6 @@ package ch.abertschi.adfree.detector
 import android.app.Notification
 import android.os.Bundle
 import ch.abertschi.adfree.model.TextRepository
-import ch.abertschi.adfree.model.TextRepositoryData
 import com.thoughtworks.xstream.XStream
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.warn
@@ -15,7 +14,7 @@ class UserDefinedTextDetector(private val repo: TextRepository) : AdDetectable, 
         var notificationKey: String? =
             payload?.statusbarNotification?.key?.toLowerCase() ?: return false
 
-        var canHandle = false;
+        var canHandle = false
         for (entry in repo.getAllEntries()) {
             val key = entry.packageName
             if (key.isEmpty() || key.isBlank()) {
@@ -23,7 +22,7 @@ class UserDefinedTextDetector(private val repo: TextRepository) : AdDetectable, 
             }
             if (notificationKey?.contains(key.toLowerCase().trim()) == true) {
                 payload.matchedTextDetectorEntries.add(entry)
-                canHandle = true;
+                canHandle = true
             }
         }
         return canHandle
@@ -54,11 +53,11 @@ class UserDefinedTextDetector(private val repo: TextRepository) : AdDetectable, 
                 val matchSubtitle =
                     subTitle != null && subTitle.contains(entryLine.trim().toLowerCase())
                 if (matchTitle || matchSubtitle) {
-                    return true;
+                    return true
                 }
             }
         }
-        return false;
+        return false
     }
 
     private fun flagAsAdvertisementDynamic(payload: AdPayload): Boolean {
@@ -79,7 +78,8 @@ class UserDefinedTextDetector(private val repo: TextRepository) : AdDetectable, 
         }
         return false
     }
-    override fun flagAsAdvertisement(payload: AdPayload)  =
+
+    override fun flagAsAdvertisement(payload: AdPayload) =
         flagAsAdvertisementFixed(payload) || flagAsAdvertisementDynamic(payload)
 
     override fun getMeta(): AdDetectorMeta = AdDetectorMeta(

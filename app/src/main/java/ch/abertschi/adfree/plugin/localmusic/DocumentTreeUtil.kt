@@ -1,14 +1,14 @@
 package ch.abertschi.adfree.plugin.localmusic
 
-import android.provider.MediaStore
-import android.provider.DocumentsContract
-import android.content.ContentUris
-import android.os.Build
 import android.annotation.TargetApi
+import android.content.ContentUris
 import android.content.Context
 import android.database.Cursor
 import android.net.Uri
+import android.os.Build
 import android.os.Environment
+import android.provider.DocumentsContract
+import android.provider.MediaStore
 
 // borrowed from
 // https://gist.github.com/asifmujteba/d89ba9074bc941de1eaa#file-asfurihelper
@@ -32,7 +32,8 @@ fun getPath(context: Context, uri: Uri): String? {
 
             val id = DocumentsContract.getDocumentId(uri)
             val contentUri = ContentUris.withAppendedId(
-                    Uri.parse("content://downloads/public_downloads"), java.lang.Long.valueOf(id))
+                Uri.parse("content://downloads/public_downloads"), java.lang.Long.valueOf(id)
+            )
 
             return getDataColumn(context, contentUri, null, null)
         } else if (isMediaDocument(uri)) {
@@ -66,8 +67,10 @@ fun getPath(context: Context, uri: Uri): String? {
     return null
 }
 
-fun getDataColumn(context: Context, uri: Uri?, selection: String?,
-                  selectionArgs: Array<String>?): String? {
+fun getDataColumn(
+    context: Context, uri: Uri?, selection: String?,
+    selectionArgs: Array<String>?
+): String? {
 
     var cursor: Cursor? = null
     val column = "_data"
@@ -87,17 +90,17 @@ fun getDataColumn(context: Context, uri: Uri?, selection: String?,
 }
 
 fun isExternalStorageDocument(uri: Uri): Boolean {
-    return "com.android.externalstorage.documents" == uri.getAuthority()
+    return "com.android.externalstorage.documents" == uri.authority
 }
 
 fun isDownloadsDocument(uri: Uri): Boolean {
-    return "com.android.providers.downloads.documents" == uri.getAuthority()
+    return "com.android.providers.downloads.documents" == uri.authority
 }
 
 fun isMediaDocument(uri: Uri): Boolean {
-    return "com.android.providers.media.documents" == uri.getAuthority()
+    return "com.android.providers.media.documents" == uri.authority
 }
 
 fun isGooglePhotosUri(uri: Uri): Boolean {
-    return "com.google.android.apps.photos.content" == uri.getAuthority()
+    return "com.google.android.apps.photos.content" == uri.authority
 }

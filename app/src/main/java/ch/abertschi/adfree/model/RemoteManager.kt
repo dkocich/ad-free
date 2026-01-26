@@ -24,23 +24,24 @@ class RemoteManager(prefFactory: PreferencesFactory) : AnkoLogger {
 
     var remoteSettings: RemoteSetting? = null
     var configFactory: YamlRemoteConfigFactory<RemoteSetting> =
-            YamlRemoteConfigFactory(URL, RemoteSetting::class.java, prefFactory)
+        YamlRemoteConfigFactory(URL, RemoteSetting::class.java, prefFactory)
 
     fun getRemoteSettingsObservable(): Observable<RemoteSetting> {
         info("feting settings getRemoteSettingsObservable")
         remoteSettings = configFactory.loadFromLocalStore()
         return Observable.create<RemoteSetting> { source ->
             configFactory.downloadObservable()
-                    .map { source -> source.first }
-                    .doOnNext { remoteSettings = it }
-                    .doOnNext { configFactory.storeToLocalStore(it) }
-                    .subscribe({ _-> source.onNext(remoteSettings!!) },
-                            { err ->
-                                info(err)
-                                //source.onError(err)
+                .map { source -> source.first }
+                .doOnNext { remoteSettings = it }
+                .doOnNext { configFactory.storeToLocalStore(it) }
+                .subscribe(
+                    { _ -> source.onNext(remoteSettings!!) },
+                    { err ->
+                        info(err)
+                        //source.onError(err)
 //                                source.onNext(remoteSettings)
-                            })
+                    })
         }
-                .observeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            .observeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
     }
 }

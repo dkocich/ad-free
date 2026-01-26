@@ -16,12 +16,13 @@ import android.graphics.Typeface
 
 class ViewSettings private constructor(val context: Context) {
 
-    var typeFace: Typeface = Typeface.createFromAsset(context.assets, "fonts/Raleway-ExtraLight.ttf")
+    var typeFace: Typeface =
+        Typeface.createFromAsset(context.assets, "fonts/Raleway-ExtraLight.ttf")
 
 
     companion object {
-        val AD_FREE_RESOURCE_ADRESS: String
-                = "https://github.com/abertschi/ad-free-resources/blob/master/"
+        val AD_FREE_RESOURCE_ADRESS: String =
+            "https://github.com/abertschi/ad-free-resources/blob/master/"
 
         val GITHUB_RAW_SUFFIX: String = "?raw=true"
 

@@ -13,7 +13,7 @@ import java.io.BufferedReader
 import java.io.File
 import java.io.InputStreamReader
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
 import kotlin.system.exitProcess
 
 /**
@@ -78,7 +78,8 @@ class CrashExceptionHandler(val context: Context) : Thread.UncaughtExceptionHand
     private fun readLogcat(): String {
         val process = Runtime.getRuntime().exec("logcat -d")
         val bufferedReader = BufferedReader(
-                InputStreamReader(process.inputStream))
+            InputStreamReader(process.inputStream)
+        )
         val log = bufferedReader.readText()
         return log
     }

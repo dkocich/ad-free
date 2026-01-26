@@ -22,7 +22,10 @@ class ActiveDetectorPresenter(val view: ActiveDetectorActivity) : AnkoLogger {
 
     fun showAdditionalInfoFor(d: AdDetectable, enable: Boolean) {
         if (d is AbstractDebugTracer && enable) {
-            view.showInfo("recording to " + (d.storageFolder?.absolutePath ?: "not available, check permissions"))
+            view.showInfo(
+                "recording to " + (d.storageFolder?.absolutePath
+                    ?: "not available, check permissions")
+            )
         }
 
         if (d is UserDefinedTextDetector && enable) {

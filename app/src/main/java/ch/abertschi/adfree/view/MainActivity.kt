@@ -7,7 +7,6 @@
 package ch.abertschi.adfree.view
 
 import android.graphics.Color
-import android.os.Build
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
@@ -40,7 +39,7 @@ class MainActivity : FragmentActivity() {
         setContentView(R.layout.main_activity)
 
 
-        mPager = findViewById(R.id.pager) as ViewPager
+        mPager = findViewById<ViewPager>(R.id.pager)!!
         mPagerAdapter = ScreenSlidePagerAdapter(supportFragmentManager)
         mPager!!.adapter = mPagerAdapter
 
@@ -53,7 +52,8 @@ class MainActivity : FragmentActivity() {
         app.mainActivity = this
     }
 
-    private inner class ScreenSlidePagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
+    private inner class ScreenSlidePagerAdapter(fm: FragmentManager) :
+        FragmentStatePagerAdapter(fm) {
 
         override fun getItem(position: Int): Fragment? {
             when (position) {

@@ -2,19 +2,17 @@ package ch.abertschi.adfree.view.mod
 
 import android.content.Context
 import android.content.Intent
+import android.os.AsyncTask
+import ch.abertschi.adfree.*
 import ch.abertschi.adfree.model.AdDetectableFactory
 import ch.abertschi.adfree.model.PreferencesFactory
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 import org.jetbrains.anko.runOnUiThread
-import android.os.AsyncTask
-import android.app.AlarmManager
-import android.app.PendingIntent
-import ch.abertschi.adfree.*
 
 
 class ModPresenter(val view: ModActivity, val prefs: PreferencesFactory) : AnkoLogger,
-        NotificationStatusObserver {
+    NotificationStatusObserver {
 
     private lateinit var context: Context
     private lateinit var notificationStatusManager: NotificationStatusManager
@@ -69,8 +67,10 @@ class ModPresenter(val view: ModActivity, val prefs: PreferencesFactory) : AnkoL
         val enabled = detectorFactory.getEnabledDetectors().size
         val visible = detectorFactory.getVisibleDetectors().size
         val total = detectorFactory.getAllDetectors().size
-        view.showDetectorCount(enabled,
-                if (enabled <= visible) visible else total)
+        view.showDetectorCount(
+            enabled,
+            if (enabled <= visible) visible else total
+        )
     }
 
     fun onToggleAlwaysOnChanged() {
@@ -80,7 +80,7 @@ class ModPresenter(val view: ModActivity, val prefs: PreferencesFactory) : AnkoL
         notificationStatusManager.restartNotificationListener()
         if (!newVal) {
             (view.applicationContext as AdFreeApplication)
-                    .notificationChannel.hideAlwaysOnNotification()
+                .notificationChannel.hideAlwaysOnNotification()
         }
     }
 

@@ -19,16 +19,16 @@ import ch.abertschi.adfree.model.RemoteSetting
 import ch.abertschi.adfree.view.home.HomeView
 
 
-
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 
 /**
  * Created by abertschi on 15.04.17.
  */
-class HomePresenter(val homeView: HomeView, val preferencesFactory: PreferencesFactory,
-                    val remoteManager: RemoteManager)
-    : AnkoLogger {
+class HomePresenter(
+    val homeView: HomeView, val preferencesFactory: PreferencesFactory,
+    val remoteManager: RemoteManager
+) : AnkoLogger {
 
     private var isInit: Boolean = false
     private var remoteSetting: RemoteSetting? = null
@@ -37,7 +37,7 @@ class HomePresenter(val homeView: HomeView, val preferencesFactory: PreferencesF
         isInit = true
         showPermissionRequiredIfNecessary(context)
         remoteManager.getRemoteSettingsObservable()
-                .subscribe { onRemoteSettingUpdate(it)}
+            .subscribe { onRemoteSettingUpdate(it) }
     }
 
     private fun onRemoteSettingUpdate(s: RemoteSetting) {
@@ -57,12 +57,11 @@ class HomePresenter(val homeView: HomeView, val preferencesFactory: PreferencesF
 
     fun hasNotificationPermission(context: Context): Boolean {
         val permission =
-                Settings.Secure.getString(context.contentResolver,
-                        "enabled_notification_listeners")
-        if (permission == null || !permission.contains(context.packageName)) {
-            return false
-        }
-        return true
+            Settings.Secure.getString(
+                context.contentResolver,
+                "enabled_notification_listeners"
+            )
+        return !(permission == null || !permission.contains(context.packageName))
     }
 
     private fun showPermissionRequiredIfNecessary(context: Context) {
@@ -74,15 +73,19 @@ class HomePresenter(val homeView: HomeView, val preferencesFactory: PreferencesF
     }
 
     fun onUpdateMessageClicked() {
-        val browserIntent = Intent(Intent.ACTION_VIEW,
-                Uri.parse(remoteSetting?.versionUrl))
+        val browserIntent = Intent(
+            Intent.ACTION_VIEW,
+            Uri.parse(remoteSetting?.versionUrl)
+        )
         this.homeView.startActivity(browserIntent)
     }
 
     fun onTroubleshooting() {
         val url = "https://abertschi.github.io/ad-free/troubleshooting/troubleshooting.html"
-        val browserIntent = Intent(Intent.ACTION_VIEW,
-                Uri.parse(url))
+        val browserIntent = Intent(
+            Intent.ACTION_VIEW,
+            Uri.parse(url)
+        )
         this.homeView.startActivity(browserIntent)
 
     }

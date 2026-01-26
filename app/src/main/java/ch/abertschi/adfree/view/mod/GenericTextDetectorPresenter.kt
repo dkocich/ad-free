@@ -18,7 +18,7 @@ class GenericTextDetectorPresenter(val ctx: Context, val view: GenericTextDetect
     }
 
     fun getData(): List<TextRepositoryData> {
-        return data;
+        return data
     }
 
     fun addNewEntry(): TextRepositoryData {
@@ -30,7 +30,7 @@ class GenericTextDetectorPresenter(val ctx: Context, val view: GenericTextDetect
     }
 
     fun updateEntry(d: TextRepositoryData) {
-        if (data.contains(d)){
+        if (data.contains(d)) {
             textRepository.updateEntry(d)
         }
     }
@@ -43,9 +43,12 @@ class GenericTextDetectorPresenter(val ctx: Context, val view: GenericTextDetect
     }
 
     fun browseHelp() {
-        val url = "https://abertschi.github.io/ad-free/troubleshooting/troubleshooting.html#generic-text-detector"
-        val browserIntent = Intent(Intent.ACTION_VIEW,
-            Uri.parse(url))
+        val url =
+            "https://abertschi.github.io/ad-free/troubleshooting/troubleshooting.html#generic-text-detector"
+        val browserIntent = Intent(
+            Intent.ACTION_VIEW,
+            Uri.parse(url)
+        )
         this.view.startActivity(browserIntent)
     }
 

@@ -7,18 +7,21 @@
 package ch.abertschi.adfree.presenter
 
 import android.content.Context
+import android.content.Intent
 import ch.abertschi.adfree.model.PreferencesFactory
 import ch.abertschi.adfree.view.about.AboutView
-import org.jetbrains.anko.AnkoLogger
-import android.content.Intent
 import ch.abertschi.adfree.view.mod.ModActivity
+import org.jetbrains.anko.AnkoLogger
 
 
 /**
  * Created by abertschi on 02.09.17.
  */
-class AboutPresenter(val view: AboutView, val preferencesFactory: PreferencesFactory, val context: Context)
-    : AnkoLogger {
+class AboutPresenter(
+    val view: AboutView,
+    val preferencesFactory: PreferencesFactory,
+    val context: Context
+) : AnkoLogger {
 
     private var isInit: Boolean = false
 
@@ -35,5 +38,5 @@ class AboutPresenter(val view: AboutView, val preferencesFactory: PreferencesFac
         this.context!!.startActivity(myIntent)
 
     }
-    
+
 }

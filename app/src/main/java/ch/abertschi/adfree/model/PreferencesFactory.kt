@@ -34,7 +34,8 @@ class PreferencesFactory(context: Context) : AnkoLogger {
     private val prefsGoogleCast = "CAST_ENABLED"
     private val prefsLoopPlayback: String = "location_local_music_loop"
 
-    private val prefs: SharedPreferences = context.getSharedPreferences(prefsKey, Context.MODE_PRIVATE)
+    private val prefs: SharedPreferences =
+        context.getSharedPreferences(prefsKey, Context.MODE_PRIVATE)
 
     fun isBlockingEnabled(): Boolean {
         return prefs.getBoolean(prefIsEnabled, true)
@@ -62,36 +63,35 @@ class PreferencesFactory(context: Context) : AnkoLogger {
 
     fun setGoogleCastEnabled(e: Boolean) = prefs.edit().putBoolean(prefsGoogleCast, e).commit()
 
-    fun storeVoiceCallAudioVolume(volume: Int)
-            = prefs.edit().putInt(prefsAudioVolume, volume).commit()
+    fun storeVoiceCallAudioVolume(volume: Int) =
+        prefs.edit().putInt(prefsAudioVolume, volume).commit()
 
     fun loadVoiceCallAudioVolume(): Int =
-            prefs.getInt(prefsAudioVolume, 100)
+        prefs.getInt(prefsAudioVolume, 100)
 
 
-    fun setPlayUntilEnd(flag: Boolean)
-            = prefs.edit().putBoolean(prefsPlayUntilEnd, flag).commit()
+    fun setPlayUntilEnd(flag: Boolean) = prefs.edit().putBoolean(prefsPlayUntilEnd, flag).commit()
 
     fun getPlayUntilEnd(): Boolean =
-            prefs.getBoolean(prefsPlayUntilEnd, false)
+        prefs.getBoolean(prefsPlayUntilEnd, false)
 
-    fun setLoopMusicPlayback(flag: Boolean)
-            = prefs.edit().putBoolean(prefsLoopPlayback, flag).commit()
+    fun setLoopMusicPlayback(flag: Boolean) =
+        prefs.edit().putBoolean(prefsLoopPlayback, flag).commit()
 
     fun getLoopMusicPlayback(): Boolean =
-            prefs.getBoolean(prefsLoopPlayback, false)
+        prefs.getBoolean(prefsLoopPlayback, false)
 
-    fun storeStreamMusicAudioVolume(volume: Int)
-            = prefs.edit().putInt(prefsStreamMusicAudioVolume, volume).commit()
+    fun storeStreamMusicAudioVolume(volume: Int) =
+        prefs.edit().putInt(prefsStreamMusicAudioVolume, volume).commit()
 
     fun loadStreaMusicAudioVolume(): Int =
-            prefs.getInt(prefsStreamMusicAudioVolume, 100)
+        prefs.getInt(prefsStreamMusicAudioVolume, 100)
 
     fun getLocalMusicDirectory(): String =
-            prefs.getString(prefsLocalMusic, "not set yet")!!
+        prefs.getString(prefsLocalMusic, "not set yet")!!
 
     fun setLocalMusicDirectory(value: String) =
-            prefs.edit().putString(prefsLocalMusic, value).commit()
+        prefs.edit().putString(prefsLocalMusic, value).commit()
 
     @Deprecated("Dont use shared prefs outside this class anymore")
     fun getPreferences(): SharedPreferences = prefs
@@ -105,28 +105,31 @@ class PreferencesFactory(context: Context) : AnkoLogger {
     }
 
     fun isAlwaysOnNotificationEnabled() =
-            prefs.getBoolean(prefsAlwaysOnNoti, false)
+        prefs.getBoolean(prefsAlwaysOnNoti, false)
 
     fun setAlwaysOnNotification(enable: Boolean) =
-            prefs.edit().putBoolean(prefsAlwaysOnNoti, enable).commit()
+        prefs.edit().putBoolean(prefsAlwaysOnNoti, enable).commit()
 
     fun getDelaySeconds(): Int =
-            prefs.getInt(prefsDelaySound, 0)
+        prefs.getInt(prefsDelaySound, 0)
 
     fun setDelaySeconds(s: Int) =
-            prefs.edit().putInt(prefsDelaySound, s).commit()
+        prefs.edit().putInt(prefsDelaySound, s).commit()
 
 
     fun isAdDetectableEnabled(d: AdDetectable) =
-            prefs.getBoolean(prefsAdDetectableMetaPrefix + d.javaClass.canonicalName,
-                    d.getMeta().enabledByDef)
+        prefs.getBoolean(
+            prefsAdDetectableMetaPrefix + d.javaClass.canonicalName,
+            d.getMeta().enabledByDef
+        )
 
     fun saveAdDetectableEnable(enable: Boolean, d: AdDetectable) {
-        prefs.edit().putBoolean(prefsAdDetectableMetaPrefix + d.javaClass.canonicalName, enable).apply()
+        prefs.edit().putBoolean(prefsAdDetectableMetaPrefix + d.javaClass.canonicalName, enable)
+            .apply()
     }
 
     fun isDeveloperModeEnabled() = prefs.getBoolean(prefsIsDebugDetectors, false)
 
     fun setDeveloperMode(isDebug: Boolean) =
-            prefs.edit().putBoolean(prefsIsDebugDetectors, isDebug).commit()
+        prefs.edit().putBoolean(prefsIsDebugDetectors, isDebug).commit()
 }

@@ -32,7 +32,6 @@ import ch.abertschi.adfree.presenter.SettingsPresenter
 import ch.abertschi.adfree.view.MainActivity
 import ch.abertschi.adfree.view.ViewSettings
 import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.onItemSelectedListener
 import org.jetbrains.anko.toast
 import org.jetbrains.anko.warn
 
@@ -77,7 +76,7 @@ class SettingsActivity : Fragment(), SettingsView, AnkoLogger, PluginActivityAct
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
 
-        pluginViewContainer = rootView?.findViewById(R.id.setting_plugin_view) as LinearLayout
+        pluginViewContainer = rootView?.findViewById<LinearLayout>(R.id.setting_plugin_view)!!
         clearPluginView()
         pluginViewContainer?.addView(view)
     }
@@ -90,7 +89,7 @@ class SettingsActivity : Fragment(), SettingsView, AnkoLogger, PluginActivityAct
         storedAppContext = activity?.applicationContext as AdFreeApplication
 
         typeFace = ViewSettings.instance(this.tryActivity()!!).typeFace
-        settingsTitle = view?.findViewById(R.id.settingsTitle) as TextView
+        settingsTitle = view?.findViewById<TextView>(R.id.settingsTitle)!!
         settingsTitle?.typeface = typeFace
 
         settingPresenter = SettingsModul(this.tryActivity()!!, this).provideSettingsPresenter()
@@ -100,7 +99,7 @@ class SettingsActivity : Fragment(), SettingsView, AnkoLogger, PluginActivityAct
 
         settingsTitle?.text = Html.fromHtml(text)
 
-        spinner = view?.findViewById(R.id.spinner) as Spinner
+        spinner = view?.findViewById<Spinner>(R.id.spinner)!!
         spinnerAdapter = PluginSpinnerAdapter(
             this.tryActivity()!!, R.layout.replacer_setting_item,
             settingPresenter.getStringEntriesOfModel(), spinner!!, view

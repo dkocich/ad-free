@@ -14,8 +14,8 @@ import org.jetbrains.anko.AnkoLogger
 /**
  * Created by abertschi on 02.09.17.
  */
-class MainActivityPresenter(val view: AboutView, val preferencesFactory: PreferencesFactory)
-    : AnkoLogger {
+class MainActivityPresenter(val view: AboutView, val preferencesFactory: PreferencesFactory) :
+    AnkoLogger {
 
     private var isInit: Boolean = false
 

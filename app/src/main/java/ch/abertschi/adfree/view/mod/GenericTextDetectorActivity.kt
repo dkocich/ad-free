@@ -38,7 +38,7 @@ class GenericTextDetectorActivity : AppCompatActivity(), AnkoLogger {
 
         var viewManager = LinearLayoutManager(this)
         viewAdapter = DetectorAdapter(presenter.getData(), presenter)
-        var recyclerView = findViewById<RecyclerView>(R.id.detector_recycle_view).apply {
+        findViewById<RecyclerView>(R.id.detector_recycle_view).apply {
             layoutManager = viewManager
             adapter = viewAdapter
         }
@@ -71,12 +71,12 @@ class GenericTextDetectorActivity : AppCompatActivity(), AnkoLogger {
                 it.dismiss()
             }
             .create()
-            d.window?.setBackgroundDrawableResource(R.color.colorBackground)
+        d.window?.setBackgroundDrawableResource(R.color.colorBackground)
         d.show()
     }
 
     fun insertData() {
-        viewAdapter.notifyDataSetChanged();
+        viewAdapter.notifyDataSetChanged()
     }
 
     private class DetectorAdapter(
@@ -100,8 +100,8 @@ class GenericTextDetectorActivity : AppCompatActivity(), AnkoLogger {
 
             val view = LayoutInflater.from(parent.context)
                 .inflate(R.layout.mod_text_detector_view_element, parent, false)
-            val title = view.findViewById(R.id.det_title) as EditText
-            val subtitle = view.findViewById(R.id.det_subtitle) as EditText
+            val title: EditText = view.findViewById(R.id.det_title)
+            val subtitle: EditText = view.findViewById(R.id.det_subtitle)
             val more = view.findViewById<ImageView>(R.id.det_more) as ImageView
             val sep = view.findViewById<View>(R.id.mod_det_seperation)
             return MyViewHolder(view, title, subtitle, more, sep)

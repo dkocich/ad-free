@@ -5,16 +5,15 @@
  */
 
 package ch.abertschi.adfree
+
+import android.content.Intent
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
 import ch.abertschi.adfree.detector.AdPayload
 import com.thoughtworks.xstream.XStream
+import org.jetbrains.anko.*
 import java.io.File
 import java.io.FileOutputStream
-import android.app.Service
-import android.content.Intent
-
-import org.jetbrains.anko.*
 
 /**
  * Created by abertschi on 11.12.16.
@@ -51,7 +50,7 @@ class NotificationsListeners : NotificationListenerService(), AnkoLogger {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         info { "Starting ad-free notificationsListener" }
-        return Service.START_STICKY
+        return START_STICKY
     }
 
     @Deprecated("for testing only")

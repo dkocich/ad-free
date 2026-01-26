@@ -8,10 +8,10 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.service.notification.ConditionProviderService
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.warn
 import android.support.v4.app.NotificationManagerCompat
+import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
+import org.jetbrains.anko.warn
 
 
 class NotificationStatusManager(val context: Context) : AnkoLogger {
@@ -47,10 +47,20 @@ class NotificationStatusManager(val context: Context) : AnkoLogger {
     fun forceTimedRestart() {
         // TODO: option to remove timer once enabled?
         val serviceintent = Intent(this.context, NotificationsListeners::class.java)
-        val pendingintent = PendingIntent.getService(this.context, 0, serviceintent, PendingIntent.FLAG_CANCEL_CURRENT)
+        val pendingintent = PendingIntent.getService(
+            this.context,
+            0,
+            serviceintent,
+            PendingIntent.FLAG_CANCEL_CURRENT
+        )
         val alarm = this.context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         alarm.cancel(pendingintent)
-        alarm.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), TIMER_INTERVAL_MS, pendingintent)
+        alarm.setRepeating(
+            AlarmManager.RTC_WAKEUP,
+            System.currentTimeMillis(),
+            TIMER_INTERVAL_MS,
+            pendingintent
+        )
         info { "Setting wakeup with alarmmanager every $TIMER_INTERVAL_MS ms" }
     }
 
@@ -59,8 +69,10 @@ class NotificationStatusManager(val context: Context) : AnkoLogger {
         info { "restarting notification listener" }
         restartComponentService()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val componentName = ComponentName(context.applicationContext,
-                    NotificationsListeners::class.java!!)
+            val componentName = ComponentName(
+                context.applicationContext,
+                NotificationsListeners::class.java!!
+            )
 
             ConditionProviderService.requestRebind(componentName)
         } else {
@@ -71,10 +83,14 @@ class NotificationStatusManager(val context: Context) : AnkoLogger {
 
     private fun restartComponentService() {
         val pm = context.packageManager
-        pm.setComponentEnabledSetting(ComponentName(this.context, NotificationsListeners::class.java!!),
-                PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP)
-        pm.setComponentEnabledSetting(ComponentName(this.context, NotificationsListeners::class.java!!),
-                PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP)
+        pm.setComponentEnabledSetting(
+            ComponentName(this.context, NotificationsListeners::class.java!!),
+            PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP
+        )
+        pm.setComponentEnabledSetting(
+            ComponentName(this.context, NotificationsListeners::class.java!!),
+            PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP
+        )
     }
 }
 

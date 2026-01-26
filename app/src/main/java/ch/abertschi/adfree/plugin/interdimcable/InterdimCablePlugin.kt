@@ -19,27 +19,28 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.error
 import org.jetbrains.anko.info
 import java.util.concurrent.TimeUnit
 
 /**
  * Created by abertschi on 21.04.17.
  */
-class InterdimCablePlugin(val prefs: PreferencesFactory,
-                          val audioController: AudioController,
-                          val globalContext: Context,
-                          val notificationChannel: NotificationChannel) : AdPlugin, AnkoLogger {
+class InterdimCablePlugin(
+    val prefs: PreferencesFactory,
+    val audioController: AudioController,
+    val globalContext: Context,
+    val notificationChannel: NotificationChannel
+) : AdPlugin, AnkoLogger {
 
     private val GITHUB_RAW_SUFFIX: String = "?raw=true"
-    private val AD_FREE_RESOURCE_ADRESS: String
-            = "https://github.com/abertschi/ad-free-resources/blob/master/"
+    private val AD_FREE_RESOURCE_ADRESS: String =
+        "https://github.com/abertschi/ad-free-resources/blob/master/"
 
     private val BASE_URL: String = AD_FREE_RESOURCE_ADRESS + "plugins/interdimensional-cable/"
     private val PLUGIN_FILE_PATH: String = BASE_URL + "plugin.yaml" + GITHUB_RAW_SUFFIX
 
     private var configFactory: YamlRemoteConfigFactory<InterdimCableModel> =
-            YamlRemoteConfigFactory(PLUGIN_FILE_PATH, InterdimCableModel::class.java, prefs)
+        YamlRemoteConfigFactory(PLUGIN_FILE_PATH, InterdimCableModel::class.java, prefs)
 
     private var model: InterdimCableModel? = null
     private var interdimCableView: InterdimCableView? = InterdimCableView(globalContext)
@@ -76,19 +77,19 @@ class InterdimCablePlugin(val prefs: PreferencesFactory,
 
     private fun updatePluginSettings(callback: (() -> Unit)? = null) {
         configFactory.downloadObservable()
-                .subscribe(
-                        { pair ->
-                            model = pair.first
-                            info("Interdimensional cable plugin settings updated")
-                            info("downloaded meta data for " + model?.channels?.size + " channels")
-                            configFactory.storeToLocalStore(model!!)
-                            callback?.invoke()
-                        },
-                        { error ->
-                            interdimCableView?.showInternetError()
-                            callback?.invoke()
-                        }
-                )
+            .subscribe(
+                { pair ->
+                    model = pair.first
+                    info("Interdimensional cable plugin settings updated")
+                    info("downloaded meta data for " + model?.channels?.size + " channels")
+                    configFactory.storeToLocalStore(model!!)
+                    callback?.invoke()
+                },
+                { error ->
+                    interdimCableView?.showInternetError()
+                    callback?.invoke()
+                }
+            )
     }
 
     override fun play() {
@@ -110,11 +111,12 @@ class InterdimCablePlugin(val prefs: PreferencesFactory,
                 val title = item.name ?: item.path?.split("/")?.last()
 
                 Observable.just(true).delay(1000, TimeUnit.MILLISECONDS)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread()).subscribe {
-                            notificationChannel.updateAdNotification(
-                                    title = title)
-                        }
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread()).subscribe {
+                        notificationChannel.updateAdNotification(
+                            title = title
+                        )
+                    }
             }
         } else {
             interdimCableView?.showNoChannelsError()
@@ -135,7 +137,7 @@ class InterdimCablePlugin(val prefs: PreferencesFactory,
         runAndCatchException({ player.forceStop(onStoped) })
     }
 
-    private fun runAndCatchException(function: () -> Unit): Unit {
+    private fun runAndCatchException(function: () -> Unit) {
         try {
             function()
         } catch (e: Throwable) {

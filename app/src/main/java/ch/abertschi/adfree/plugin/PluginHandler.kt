@@ -15,9 +15,11 @@ import org.jetbrains.anko.info
 /**
  * Created by abertschi on 21.04.17.
  */
-class PluginHandler(val prefs: PreferencesFactory,
-                    val plugins: List<AdPlugin>,
-                    val adDetector: AdObservable) : AnkoLogger {
+class PluginHandler(
+    val prefs: PreferencesFactory,
+    val plugins: List<AdPlugin>,
+    val adDetector: AdObservable
+) : AnkoLogger {
 
     private var activePlugin: AdPlugin = loadActivePlugin()
 
@@ -54,6 +56,5 @@ class PluginHandler(val prefs: PreferencesFactory,
 
     fun forceStopPlugin(onStoped: () -> Unit) = activePlugin?.forceStop(onStoped)
 
-    private fun serializeActivePluginId(plugin: AdPlugin): String
-            = plugin.javaClass.canonicalName
+    private fun serializeActivePluginId(plugin: AdPlugin): String = plugin.javaClass.canonicalName
 }

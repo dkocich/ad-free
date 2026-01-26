@@ -6,7 +6,7 @@ import android.content.Intent
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 
-class StartOnBootListener: BroadcastReceiver(), AnkoLogger {
+class StartOnBootListener : BroadcastReceiver(), AnkoLogger {
 
     override fun onReceive(context: Context?, intent: Intent?) {
         info { "launching ad-free on boot. Hello world" }

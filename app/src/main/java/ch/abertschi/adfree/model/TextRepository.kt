@@ -5,10 +5,7 @@ import android.content.SharedPreferences
 import com.thoughtworks.xstream.XStream
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
-import java.lang.IllegalStateException
 import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashSet
 
 data class TextRepositoryData(
     var packageName: String = "",
@@ -18,7 +15,7 @@ data class TextRepositoryData(
 ) {
 
     fun serializeToString(): String {
-        return Companion.serializeToString(this)
+        return serializeToString(this)
     }
 
     companion object {
@@ -29,7 +26,7 @@ data class TextRepositoryData(
         }
 
         fun deserialzeFromString(s: String?): TextRepositoryData {
-            return serial.fromXML(s) as TextRepositoryData;
+            return serial.fromXML(s) as TextRepositoryData
         }
     }
 }
@@ -56,7 +53,6 @@ class TextRepository : AnkoLogger {
     private fun getKeys(): MutableSet<String> {
         return sharedPreferences.getStringSet(ID_KEYS, HashSet<String>())
     }
-
 
 
     private fun getEntryByFormattedKey(key: String): TextRepositoryData? {

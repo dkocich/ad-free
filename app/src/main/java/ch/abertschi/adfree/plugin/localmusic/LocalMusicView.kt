@@ -6,26 +6,19 @@
 
 package ch.abertschi.adfree.plugin.localmusic
 
-import android.app.Activity
-import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.support.v7.widget.SwitchCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
 import ch.abertschi.adfree.R
 import ch.abertschi.adfree.plugin.PluginActivityAction
-
+import ch.abertschi.adfree.view.ViewSettings
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.longToast
 import org.jetbrains.anko.runOnUiThread
-
-import android.support.v7.app.AlertDialog
-import android.support.v7.widget.SwitchCompat
-import ch.abertschi.adfree.AdFreeApplication
-import ch.abertschi.adfree.view.ViewSettings
-import org.jetbrains.anko.info
 
 /**
  * Created by abertschi on 29.08.17.
@@ -97,7 +90,8 @@ class LocalMusicView(val context: Context, val action: PluginActivityAction) : A
     }
 
     fun showPlayUntilEndEnabled(e: Boolean) {
-        viewInstance.findViewById<SwitchCompat>(R.id.local_music_play_until_end_switch).isChecked = e
+        viewInstance.findViewById<SwitchCompat>(R.id.local_music_play_until_end_switch).isChecked =
+            e
     }
 
     fun showLoopEnabled(e: Boolean) {

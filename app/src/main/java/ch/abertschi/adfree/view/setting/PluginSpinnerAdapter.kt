@@ -29,14 +29,22 @@ class PluginSpinnerAdapter
     private var spinner: Spinner
     private var viewToClickOnToDismissPopup: View?
 
-    constructor(context: Context, textViewResourceId: Int, objects: Array<String>, spinner: Spinner, viewToClickOnToDismissPopup: View? = null) : super(context, textViewResourceId, objects) {
+    constructor(
+        context: Context,
+        textViewResourceId: Int,
+        objects: Array<String>,
+        spinner: Spinner,
+        viewToClickOnToDismissPopup: View? = null
+    ) : super(context, textViewResourceId, objects) {
         this.objects = objects
         this.spinner = spinner
         this.viewToClickOnToDismissPopup = viewToClickOnToDismissPopup
     }
 
-    override fun getDropDownView(position: Int, convertView: View?,
-                                 parent: ViewGroup): View {
+    override fun getDropDownView(
+        position: Int, convertView: View?,
+        parent: ViewGroup
+    ): View {
         return getCustomView(position, convertView, parent)
     }
 
@@ -45,9 +53,10 @@ class PluginSpinnerAdapter
     }
 
     fun getCustomView(position: Int, convertView: View?, parent: ViewGroup): View {
-        val inflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val inflater: LayoutInflater =
+            context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val view = inflater.inflate(R.layout.replacer_setting_item, parent, false)
-        val textView = view.findViewById(R.id.setting_spinner_item) as TextView
+        val textView: TextView = view.findViewById(R.id.setting_spinner_item)
         textView.text = objects[position]
         textView.typeface = ViewSettings.instance(context).typeFace
         view.setOnClickListener {

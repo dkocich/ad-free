@@ -1,20 +1,18 @@
 package ch.abertschi.adfree.crashhandler
 
-import android.content.Context
+import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.text.Html
 import android.view.View
 import android.widget.TextView
-import ch.abertschi.adfree.R
 import android.widget.Toast
+import ch.abertschi.adfree.R
 import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.info
 import org.jetbrains.anko.warn
 import java.io.File
-import java.lang.Exception
-import android.content.Intent
-import org.jetbrains.anko.info
 
 // TODO: refator this into presenter and view
 class SendCrashReportActivity : AppCompatActivity(), View.OnClickListener, AnkoLogger {
@@ -67,7 +65,7 @@ class SendCrashReportActivity : AppCompatActivity(), View.OnClickListener, AnkoL
         sendIntent.putExtra(Intent.EXTRA_SUBJECT, SUBJECT)
         sendIntent.type = "text/plain"
         this.applicationContext
-                .startActivity(Intent.createChooser(sendIntent, "Choose an Email client"))
+            .startActivity(Intent.createChooser(sendIntent, "Choose an Email client"))
     }
 
 
@@ -79,32 +77,33 @@ class SendCrashReportActivity : AppCompatActivity(), View.OnClickListener, AnkoL
     private fun setupUI() {
         setContentView(R.layout.crash_view)
         setFinishOnTouchOutside(false)
-        val v = findViewById(R.id.crash_container) as View
+        val v: View = findViewById(R.id.crash_container)
         v.setOnClickListener(this)
 
-        var typeFace: Typeface = Typeface.createFromAsset(baseContext.assets, "fonts/Raleway-ExtraLight.ttf")
+        var typeFace: Typeface =
+            Typeface.createFromAsset(baseContext.assets, "fonts/Raleway-ExtraLight.ttf")
 
 
-        val title = findViewById(R.id.crash_Title) as TextView
+        val title: TextView = findViewById(R.id.crash_Title)
         title.typeface = typeFace
 
         title.setOnClickListener(this)
 
         val text =
-                "success is not final, failure is not fatal: it is the " +
-                        "<font color=#FFFFFF>courage</font> to <font color=#FFFFFF>continue</font> that counts. -- " +
-                        "Winston Churchill"
+            "success is not final, failure is not fatal: it is the " +
+                    "<font color=#FFFFFF>courage</font> to <font color=#FFFFFF>continue</font> that counts. -- " +
+                    "Winston Churchill"
 
         title?.text = Html.fromHtml(text)
 
-        val subtitle = findViewById(R.id.debugSubtitle) as TextView
+        val subtitle: TextView = findViewById(R.id.debugSubtitle)
         subtitle.typeface = typeFace
 
         subtitle.setOnClickListener(this)
 
         val subtitletext =
-                "<font color=#FFFFFF>ad-free</font> crashed. be courageous and continue. " +
-                        "send the <font color=#FFFFFF>crash report </font>. tab here, choose your mail application and send the report.</font>"
+            "<font color=#FFFFFF>ad-free</font> crashed. be courageous and continue. " +
+                    "send the <font color=#FFFFFF>crash report </font>. tab here, choose your mail application and send the report.</font>"
 
 
         subtitle.text = Html.fromHtml(subtitletext)
@@ -119,12 +118,16 @@ class SendCrashReportActivity : AppCompatActivity(), View.OnClickListener, AnkoL
                 warn { "cant send crash report" }
                 warn { e }
                 e.printStackTrace()
-                Toast.makeText(this, "No crash report available.",
-                        Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    this, "No crash report available.",
+                    Toast.LENGTH_LONG
+                ).show()
             }
         } ?: run {
-            Toast.makeText(this, "No crash report available.",
-                    Toast.LENGTH_LONG).show()
+            Toast.makeText(
+                this, "No crash report available.",
+                Toast.LENGTH_LONG
+            ).show()
         }
     }
 }

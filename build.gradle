@@ -1,15 +1,15 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    ext.kotlin_version = '1.3.40'
+    ext.kotlin_version = '2.2.0'
     repositories {
         google()
-        jcenter()
+        mavenCentral() // Add this line
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.2.1'
+        classpath 'com.android.tools.build:gradle:8.13.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'org.codehaus.groovy:groovy-android-gradle-plugin:1.2.0'
+        // Removed groovy-android-gradle-plugin as it's deprecated and not needed
 
 
         // NOTE: Do not place your application dependencies here; they belong
@@ -19,7 +19,7 @@ buildscript {
 
 allprojects {
     repositories {
-        jcenter()
+        mavenCentral() // Add this line here too, if you have an allprojects block
         maven {
             url "https://jitpack.io"
 
@@ -32,6 +32,6 @@ allprojects {
     }
 }
 
-task clean(type: Delete) {
+tasks.register('clean', Delete) {
     delete rootProject.buildDir
 }

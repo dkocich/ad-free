@@ -1,4 +1,5 @@
 package ch.abertschi.adfree.detector
+
 import org.jetbrains.anko.AnkoLogger
 import java.io.File
 

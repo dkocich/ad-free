@@ -18,8 +18,8 @@ interface AdPlugin {
     fun hasSettingsView(): Boolean = false
     fun settingsView(context: Context, activityActions: PluginActivityAction): View? = null
 
-    fun play(): Unit
-    fun playTrial(): Unit
+    fun play()
+    fun playTrial()
 
     /**
      * run plugin until the end and call callback on stop

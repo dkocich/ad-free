@@ -18,7 +18,8 @@ abstract class AbstractSpStatusBarDetector : AdDetectable, AnkoLogger {
     }
 
     override fun canHandle(payload: AdPayload): Boolean {
-        return payload?.statusbarNotification?.key?.toLowerCase()?.contains(SPOTIFY_PACKAGE) ?: false
+        return payload?.statusbarNotification?.key?.toLowerCase()?.contains(SPOTIFY_PACKAGE)
+            ?: false
     }
 
 

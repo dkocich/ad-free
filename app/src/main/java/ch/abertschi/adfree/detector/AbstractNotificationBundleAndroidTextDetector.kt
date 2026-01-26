@@ -1,11 +1,11 @@
 package ch.abertschi.adfree.detector
 
-import android.app.Notification
 import android.os.Bundle
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.warn
 
-abstract class AbstractNotificationBundleAndroidTextDetector : AdDetectable, AnkoLogger, AbstractNotificationDetector() {
+abstract class AbstractNotificationBundleAndroidTextDetector : AdDetectable, AnkoLogger,
+    AbstractNotificationDetector() {
 
     open fun extractString(extras: Bundle?, key: String): Pair<String?, Boolean> {
         return try {

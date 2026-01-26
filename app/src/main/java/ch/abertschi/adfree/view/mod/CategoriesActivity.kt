@@ -2,21 +2,17 @@ package ch.abertschi.adfree.view.mod
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.SwitchCompat
 import android.text.Html
-
-import android.widget.TextView
-
 import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ScrollView
+import android.widget.TextView
 import ch.abertschi.adfree.R
 import org.jetbrains.anko.*
-
-import android.support.v7.widget.RecyclerView
-import android.view.ViewGroup
-
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.SwitchCompat
-import android.view.View
-import android.widget.ScrollView
 
 
 class CategoriesActivity : AppCompatActivity(), AnkoLogger {
@@ -84,11 +80,11 @@ class CategoryAdapter(
 
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.mod_active_detectors_view_element, parent, false)
-        val title = view.findViewById(R.id.det_title) as TextView
-        val subtitle = view.findViewById(R.id.det_subtitle) as TextView
+        val title: TextView = view.findViewById(R.id.det_title)
+        val subtitle: TextView = view.findViewById(R.id.det_subtitle)
         val sep = view.findViewById<View>(R.id.mod_det_seperation)
         val switch = view.findViewById<TextView>(R.id.det_switch) as SwitchCompat
-        switch.visibility = View.GONE;
+        switch.visibility = View.GONE
         return CategoryViewHolder(view, title, subtitle, sep)
     }
 

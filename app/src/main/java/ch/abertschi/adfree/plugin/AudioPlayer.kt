@@ -21,9 +21,11 @@ import java.util.concurrent.TimeUnit
 /**
  * Created by abertschi on 28.08.17.
  */
-open class AudioPlayer(val context: Context,
-                       val prefs: PreferencesFactory,
-                       val audioController: AudioController) : AnkoLogger {
+open class AudioPlayer(
+    val context: Context,
+    val prefs: PreferencesFactory,
+    val audioController: AudioController
+) : AnkoLogger {
 
     private var isPlaying: Boolean = false
     private var onStopCallables: ArrayList<() -> Unit> = ArrayList()
@@ -73,8 +75,10 @@ open class AudioPlayer(val context: Context,
         }
     }
 
-    private fun initializeMediaPlayerObservable(context: Context, url: String): Observable<MediaPlayer>
-            = Observable.create<MediaPlayer> { source ->
+    private fun initializeMediaPlayerObservable(
+        context: Context,
+        url: String
+    ): Observable<MediaPlayer> = Observable.create<MediaPlayer> { source ->
         player = MediaPlayer()
         player?.setDataSource(url)
         player?.setAudioStreamType(AudioManager.STREAM_VOICE_CALL)
@@ -84,15 +88,15 @@ open class AudioPlayer(val context: Context,
         trackPreparationDelayCallable?.let {
             info { "creating observable" }
             Observable.just(true)
-                    .delay(500, TimeUnit.MILLISECONDS)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread()).subscribe {
-                info { "executing observable: $asyncPreparationDone" }
-                if (!asyncPreparationDone) {
-                    info { "invoking observable" }
-                    trackPreparationDelayCallable?.invoke()
+                .delay(500, TimeUnit.MILLISECONDS)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread()).subscribe {
+                    info { "executing observable: $asyncPreparationDone" }
+                    if (!asyncPreparationDone) {
+                        info { "invoking observable" }
+                        trackPreparationDelayCallable?.invoke()
+                    }
                 }
-            }
         }
         player?.prepareAsync()
         player?.setOnPreparedListener {
@@ -119,9 +123,8 @@ open class AudioPlayer(val context: Context,
 //        httpProxy = null
     }
 
-    private fun storeAudioVolume(volume: Int)
-            = prefs.storeVoiceCallAudioVolume(volume)
+    private fun storeAudioVolume(volume: Int) = prefs.storeVoiceCallAudioVolume(volume)
 
     private fun loadAudioVolume(): Int =
-            prefs.loadVoiceCallAudioVolume()
+        prefs.loadVoiceCallAudioVolume()
 }

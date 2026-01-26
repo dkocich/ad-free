@@ -32,8 +32,10 @@ class HomeActivity() : Fragment(), HomeView, AnkoLogger {
     private lateinit var homePresenter: HomePresenter
     private lateinit var updateMessageInfo: TextView
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater?.inflate(R.layout.home_view, container, false)
     }
 
@@ -41,13 +43,13 @@ class HomeActivity() : Fragment(), HomeView, AnkoLogger {
         super.onCreate(savedInstanceState)
 
         homePresenter = HomeModul(this.activity!!, this).provideSettingsPresenter()
-        
+
 
         typeFace = ViewSettings.instance(this.context!!).typeFace
 
-        enjoySloganText = view.findViewById(R.id.enjoy) as TextView
+        enjoySloganText = view.findViewById<TextView>(R.id.enjoy)!!
         updateMessageInfo =
-                view.findViewById(R.id.version_update_reminder) as TextView
+            view.findViewById<TextView>(R.id.version_update_reminder)!!
 
         view.findViewById<TextView>(R.id.troubleshooting).onClick {
             homePresenter.onTroubleshooting()
@@ -69,7 +71,7 @@ class HomeActivity() : Fragment(), HomeView, AnkoLogger {
     }
 
     override fun showUpdateMessage(show: Boolean) {
-        if (show ){
+        if (show) {
             updateMessageInfo.visibility = View.VISIBLE
             updateMessageInfo.onClick {
                 homePresenter.onUpdateMessageClicked()
@@ -103,7 +105,8 @@ class HomeActivity() : Fragment(), HomeView, AnkoLogger {
     }
 
     override fun showEnjoyAdFree() {
-        val text = "<font color=#FFFFFF>enjoy</font> your <font color=#FFFFFF>ad-free</font> music experience."
+        val text =
+            "<font color=#FFFFFF>enjoy</font> your <font color=#FFFFFF>ad-free</font> music experience."
         setSloganText(text)
         enjoySloganText.setOnClickListener(null)
     }

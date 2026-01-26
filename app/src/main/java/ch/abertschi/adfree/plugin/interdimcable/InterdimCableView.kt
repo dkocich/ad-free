@@ -26,13 +26,14 @@ class InterdimCableView(val context: Context) {
         val inflater = LayoutInflater.from(context)
         viewInstance = inflater.inflate(R.layout.plugin_interdim_cable, null, false)
 
-        var text = viewInstance?.findViewById(R.id.plugin_interdim_cable_audio_volume_text) as TextView
+        var text: TextView =
+            viewInstance?.findViewById(R.id.plugin_interdim_cable_audio_volume_text)!!
         text?.typeface = ViewSettings.instance(context).typeFace
         var t = "> configure <font color=#FFFFFF>audio volume</font>"
         text?.text = Html.fromHtml(t)
         text.setOnClickListener { presenter.configureAudioVolume() }
 
-        var des = viewInstance?.findViewById(R.id.plugin_interdim_cable_description) as TextView
+        var des: TextView = viewInstance?.findViewById(R.id.plugin_interdim_cable_description)!!
         des?.typeface = ViewSettings.instance(context).typeFace
 
         t = "enjoy intergalactic television featured in " +
