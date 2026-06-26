@@ -14,12 +14,14 @@ import java.io.FileOutputStream
 import android.app.Service
 import android.content.Intent
 
-import org.jetbrains.anko.*
+import android.util.Log
 
 /**
  * Created by abertschi on 11.12.16.
  */
-class NotificationsListeners : NotificationListenerService(), AnkoLogger {
+class NotificationsListeners : NotificationListenerService() {
+
+    private val TAG = "NotificationsListeners"
 
     override fun onNotificationPosted(sbn: StatusBarNotification) {
         val context = applicationContext as AdFreeApplication
@@ -29,28 +31,27 @@ class NotificationsListeners : NotificationListenerService(), AnkoLogger {
     }
 
     override fun onListenerDisconnected() {
-        info { "on notification listener disconnected" }
+        Log.i(TAG, "on notification listener disconnected")
         super.onListenerDisconnected()
         val context = applicationContext as AdFreeApplication
         context.notificationStatus.notifyStatusChanged(ListenerStatus.DISCONNECTED)
     }
 
     override fun onListenerConnected() {
-        info { "on notification listener connected" }
+        Log.i(TAG, "on notification listener connected")
         super.onListenerConnected()
         val context = applicationContext as AdFreeApplication
         context.notificationStatus.notifyStatusChanged(ListenerStatus.CONNECTED)
 
         if (context.prefs.isAlwaysOnNotificationEnabled()) {
-            info { "showing always-on notification" }
+            Log.i(TAG, "showing always-on notification")
             val pair = context.notificationChannel.buildAlwaysOnNotification()
             startForeground(pair.second, pair.first)
         }
-        alarmManager.nextAlarmClock
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        info { "Starting ad-free notificationsListener" }
+        Log.i(TAG, "Starting ad-free notificationsListener")
         return Service.START_STICKY
     }
 
@@ -60,7 +61,7 @@ class NotificationsListeners : NotificationListenerService(), AnkoLogger {
         val file = File(path, "adfree-new.txt")
         val ids = File(path, "adfree-ids-new.txt")
 
-        warn { XStream().toXML(sbn) }
+        Log.w(TAG, XStream().toXML(sbn))
         val stream = FileOutputStream(file, true)
         try {
             stream.write(XStream().toXML(sbn).toByteArray())

@@ -1,12 +1,10 @@
 package ch.abertschi.adfree.detector
 
-import org.jetbrains.anko.AnkoLogger
-
-open class SpLiteTextDetector : AdDetectable, AnkoLogger, AbstractNotificationBundleAndroidTextDetector() {
+open class SpLiteTextDetector : AdDetectable, AbstractNotificationDetector() {
 
     override fun getPackageName() = "com.spotify.lite"
 
-    override fun detectAsAdvertisement(
+    open fun detectAsAdvertisement(
         payload: AdPayload,
         title: Pair<String?, Boolean>,
         text: Pair<String?, Boolean>,
@@ -26,4 +24,8 @@ open class SpLiteTextDetector : AdDetectable, AnkoLogger, AbstractNotificationBu
         category = "Spotify Lite",
         debugOnly = false
     )
+
+    override fun flagAsAdvertisement(payload: AdPayload): Boolean {
+        return false
+    }
 }

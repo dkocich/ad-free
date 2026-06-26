@@ -13,17 +13,16 @@ import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.graphics.Typeface
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentActivity
 import android.text.Html
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.Spinner
-import android.widget.TextView
+import android.widget.*
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import ch.abertschi.adfree.AdFreeApplication
 import ch.abertschi.adfree.R
 import ch.abertschi.adfree.di.SettingsModul
@@ -31,19 +30,18 @@ import ch.abertschi.adfree.plugin.PluginActivityAction
 import ch.abertschi.adfree.presenter.SettingsPresenter
 import ch.abertschi.adfree.view.MainActivity
 import ch.abertschi.adfree.view.ViewSettings
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.onItemSelectedListener
-import org.jetbrains.anko.toast
-import org.jetbrains.anko.warn
 
 
 /**
  * Created by abertschi on 21.04.17.
  */
 
-class SettingsActivity : Fragment(), SettingsView, AnkoLogger, PluginActivityAction {
+class SettingsActivity : Fragment(), SettingsView, PluginActivityAction {
+
+    private val TAG: String = "SettingsActivity"
+
     override fun activity(): Activity {
-        var app = context.applicationContext as AdFreeApplication
+        var app = context!!.applicationContext as AdFreeApplication
         return app.mainActivity
     }
 
@@ -64,7 +62,7 @@ class SettingsActivity : Fragment(), SettingsView, AnkoLogger, PluginActivityAct
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater?.inflate(R.layout.setting_view, container, false)
+        return inflater.inflate(R.layout.setting_view, container, false)
     }
 
     override fun clearPluginView() {
@@ -84,42 +82,48 @@ class SettingsActivity : Fragment(), SettingsView, AnkoLogger, PluginActivityAct
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+        super.onViewCreated(view, savedInstanceState)
         this.rootView = view
 
         storedAppContext = activity?.applicationContext as AdFreeApplication
 
-        typeFace = ViewSettings.instance(this.tryActivity()!!).typeFace
-        settingsTitle = view?.findViewById(R.id.settingsTitle) as TextView
+        typeFace = ViewSettings.instance(this.tryActivity()).typeFace
+        settingsTitle = view.findViewById(R.id.settingsTitle) as TextView
         settingsTitle?.typeface = typeFace
 
-        settingPresenter = SettingsModul(this.tryActivity()!!, this).provideSettingsPresenter()
+        settingPresenter = SettingsModul(this.tryActivity(), this).provideSettingsPresenter()
 
         val text = "what do you want to do while <font color=#FFFFFF>ads </font>are " +
                 "<font color=#FFFFFF>being played ?</font>"
 
-        settingsTitle?.text = Html.fromHtml(text)
+        settingsTitle?.text = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Html.fromHtml(text, Html.FROM_HTML_MODE_LEGACY)
+        } else {
+            Html.fromHtml(text)
+        }
 
-        spinner = view?.findViewById(R.id.spinner) as Spinner
+        spinner = view.findViewById(R.id.spinner) as Spinner
         spinnerAdapter = PluginSpinnerAdapter(
-            this.tryActivity()!!, R.layout.replacer_setting_item,
+            this.tryActivity(), R.layout.replacer_setting_item,
             settingPresenter.getStringEntriesOfModel(), spinner!!, view
         )
         spinner?.adapter = spinnerAdapter
 
-        spinner?.onItemSelectedListener {
-            onItemSelected { adapterView, view, i, l ->
-                run {
-                    if (init) settingPresenter.onPluginSelected(i)
-                    spinnerAdapter?.notifyDataSetChanged()
-                }
+        spinner?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+            }
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                if (init) settingPresenter.onPluginSelected(position)
+                spinnerAdapter?.notifyDataSetChanged()
             }
         }
+
         view.findViewById<ImageView>(R.id.try_plugin_button).setOnClickListener {
             settingPresenter.tryPlugin()
         }
         view.findViewById<LinearLayout>(R.id.setting_spinner_item_container)
-            ?.setOnTouchListener { v, event ->
+            ?.setOnTouchListener { _, _ ->
                 spinner?.performClick()
                 false
             }
@@ -139,7 +143,7 @@ class SettingsActivity : Fragment(), SettingsView, AnkoLogger, PluginActivityAct
 
     override fun startActivityForResult(intent: Intent?, requestCode: Int, options: Bundle?) {
         tryActivity()
-        super.startActivityForResult(intent, requestCode, options)
+        super.startActivityForResult(intent, requestCode)
     }
 
     override fun getContext(): Context = tryActivity()
@@ -154,7 +158,7 @@ class SettingsActivity : Fragment(), SettingsView, AnkoLogger, PluginActivityAct
             val intent = Intent(storedAppContext, MainActivity::class.java)
             intent.addFlags(FLAG_ACTIVITY_NEW_TASK)
             storedAppContext.startActivity(intent)
-            warn { "Fragment not attached to Activity. subsequent calls will fail. we restart app" }
+            Log.w(TAG, "Fragment not attached to Activity. subsequent calls will fail. we restart app")
             Runtime.getRuntime().exit(0)
         }
         return this.activity!!
@@ -167,7 +171,7 @@ class SettingsActivity : Fragment(), SettingsView, AnkoLogger, PluginActivityAct
     }
 
     override fun showTryOutMessage() {
-        this.tryActivity().toast("Trying out plugin")
+        Toast.makeText(this.tryActivity(), getString(R.string.toast_trying_plugin), Toast.LENGTH_LONG).show()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

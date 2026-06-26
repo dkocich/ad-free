@@ -1,9 +1,8 @@
 package ch.abertschi.adfree.detector
 
-import org.jetbrains.anko.AnkoLogger
 import java.io.File
 
-class AccuRadioDebugTracer(storageFolder: File?) : AdDetectable, AnkoLogger,
+class AccuRadioDebugTracer(storageFolder: File?) : AdDetectable,
     AbstractDebugTracer(storageFolder) {
 
     private val PACKAGE = "com.slipstream.accuradio"
@@ -18,4 +17,8 @@ class AccuRadioDebugTracer(storageFolder: File?) : AdDetectable, AnkoLogger,
         category = "Developer",
         debugOnly = true
     )
+
+    override fun canHandle(p: AdPayload): Boolean {
+        return super.canHandle(p)
+    }
 }

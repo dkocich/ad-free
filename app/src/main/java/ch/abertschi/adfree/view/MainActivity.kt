@@ -7,20 +7,20 @@
 package ch.abertschi.adfree.view
 
 import android.graphics.Color
-import android.os.Build
 import android.os.Bundle
-import android.support.design.widget.TabLayout
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentActivity
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentStatePagerAdapter
-import android.support.v4.view.PagerAdapter
-import android.support.v4.view.ViewPager
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.Lifecycle
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
 import ch.abertschi.adfree.AdFreeApplication
 import ch.abertschi.adfree.R
 import ch.abertschi.adfree.view.home.HomeActivity
 import ch.abertschi.adfree.view.setting.AboutActivity
 import ch.abertschi.adfree.view.setting.SettingsActivity
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 
 /**
  * Created by abertschi on 21.04.17.
@@ -32,20 +32,20 @@ class MainActivity : FragmentActivity() {
         private val NUM_PAGES = 3
     }
 
-    private var mPager: ViewPager? = null
-    private var mPagerAdapter: PagerAdapter? = null
+    private var mPager: ViewPager2? = null
+    private var mPagerAdapter: FragmentStateAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
 
 
-        mPager = findViewById(R.id.pager) as ViewPager
-        mPagerAdapter = ScreenSlidePagerAdapter(supportFragmentManager)
+        mPager = findViewById(R.id.pager)
+        mPagerAdapter = ScreenSlidePagerAdapter(this)
         mPager!!.adapter = mPagerAdapter
 
         val tabLayout = findViewById<TabLayout>(R.id.tabDots)
-        tabLayout.setupWithViewPager(mPager, true)
+        TabLayoutMediator(tabLayout, mPager!!) { _, _ -> }.attach()
         window.navigationBarColor = Color.parseColor("#252A2E")
 
         // XXX: Workaround, global access to activity to prevent detached fragments
@@ -53,9 +53,9 @@ class MainActivity : FragmentActivity() {
         app.mainActivity = this
     }
 
-    private inner class ScreenSlidePagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
+    private inner class ScreenSlidePagerAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {
 
-        override fun getItem(position: Int): Fragment? {
+        override fun createFragment(position: Int): Fragment {
             when (position) {
                 0 -> return HomeActivity()
                 1 -> return SettingsActivity()
@@ -63,7 +63,7 @@ class MainActivity : FragmentActivity() {
             }
         }
 
-        override fun getCount(): Int {
+        override fun getItemCount(): Int {
             return NUM_PAGES
         }
     }

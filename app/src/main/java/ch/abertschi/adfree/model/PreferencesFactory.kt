@@ -9,14 +9,13 @@ package ch.abertschi.adfree.model
 import android.content.Context
 import android.content.SharedPreferences
 import ch.abertschi.adfree.detector.AdDetectable
-import org.jetbrains.anko.AnkoLogger
 import java.util.*
 
 /**
  * Created by abertschi on 15.04.17.
  */
 
-class PreferencesFactory(context: Context) : AnkoLogger {
+class PreferencesFactory(context: Context) {
     private val prefsKey = "PREFS"
     private val prefIsEnabled = "IS_ENABLED"
     private val prefsLastUpdateInServiceDate = "LAST_UPDATE_IN_SERVICE"
@@ -93,7 +92,6 @@ class PreferencesFactory(context: Context) : AnkoLogger {
     fun setLocalMusicDirectory(value: String) =
             prefs.edit().putString(prefsLocalMusic, value).commit()
 
-    @Deprecated("Dont use shared prefs outside this class anymore")
     fun getPreferences(): SharedPreferences = prefs
 
     fun getActivePlugin(): String? {

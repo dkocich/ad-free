@@ -1,25 +1,21 @@
 package ch.abertschi.adfree.view.mod
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.text.Html
-
-import android.widget.TextView
-
 import android.view.LayoutInflater
-import ch.abertschi.adfree.R
-import org.jetbrains.anko.*
-
-import android.support.v7.widget.RecyclerView
-import android.view.ViewGroup
-
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.SwitchCompat
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ScrollView
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SwitchCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import ch.abertschi.adfree.R
 
 
-class CategoriesActivity : AppCompatActivity(), AnkoLogger {
+class CategoriesActivity : AppCompatActivity() {
     private lateinit var categoriesRecyclerView: RecyclerView
     private lateinit var categoriesViewAdapter: RecyclerView.Adapter<*>
     private lateinit var categoriesViewManager: RecyclerView.LayoutManager
@@ -39,7 +35,7 @@ class CategoriesActivity : AppCompatActivity(), AnkoLogger {
         presenter = CategoriesPresenter(this)
 
         findViewById<ScrollView>(R.id.mod_active_scroll).scrollTo(0, 0)
-        findViewById<TextView>(R.id.detectors_activity_title).onClick { presenter.onTabTitle() }
+        findViewById<TextView>(R.id.detectors_activity_title).setOnClickListener { presenter.onTabTitle() }
         initRecycleView()
     }
 
@@ -54,12 +50,12 @@ class CategoriesActivity : AppCompatActivity(), AnkoLogger {
     }
 
     fun hideEnabledDebug() {
-        longToast("So Long, and Thanks for All the Fish")
+        Toast.makeText(this, "So Long, and Thanks for All the Fish", Toast.LENGTH_LONG).show()
         initRecycleView()
     }
 
     fun showEnabledDebug() {
-        longToast("With great power comes great responsibility")
+        Toast.makeText(this, "With great power comes great responsibility", Toast.LENGTH_LONG).show()
         initRecycleView()
     }
 }
@@ -68,7 +64,7 @@ class CategoryAdapter(
     private val cateogries: List<String>,
     private val presenter: CategoriesPresenter
 ) :
-    RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>(), AnkoLogger {
+    RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>() {
 
     class CategoryViewHolder(
         val view: View,

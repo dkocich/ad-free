@@ -1,27 +1,27 @@
 package ch.abertschi.adfree.detector
 
-import android.app.Notification
 import android.os.Bundle
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.warn
+import android.util.Log
 
-abstract class AbstractNotificationBundleAndroidTextDetector : AdDetectable, AnkoLogger, AbstractNotificationDetector() {
+abstract class AbstractNotificationBundleAndroidTextDetector : AdDetectable, AbstractNotificationDetector() {
+
+    private val TAG: String = "AbstractNotificationBundleAndroidTextDetector"
 
     open fun extractString(extras: Bundle?, key: String): Pair<String?, Boolean> {
         return try {
             Pair(
-                (extras?.get(key) as CharSequence?)
-                    ?.toString()?.trim()?.toLowerCase(), true
+                (extras?.getString(key) as CharSequence?)
+                    ?.toString()?.trim()?.lowercase(), true
             )
         } catch (e: Exception) {
-            warn { e }
+            Log.w(TAG, e)
             Pair(null, false)
         }
     }
 
 
     override fun flagAsAdvertisement(payload: AdPayload): Boolean {
-        val extras = payload.statusbarNotification?.notification?.extras
+        val extras = payload.statusbarNotification.notification?.extras
         val title = extractString(extras, "android.title")
         val text = extractString(extras, "android.text")
         val subtext = extractString(extras, "android.subText")
@@ -30,7 +30,7 @@ abstract class AbstractNotificationBundleAndroidTextDetector : AdDetectable, Ank
 
 
     abstract fun detectAsAdvertisement(
-        payload: AdPayload,
+        p: AdPayload,
         title: Pair<String?, Boolean>,
         text: Pair<String?, Boolean>,
         subtext: Pair<String?, Boolean>

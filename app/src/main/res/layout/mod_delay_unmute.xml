@@ -10,7 +10,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:paddingLeft="25dp"
-    android:background="#252A2E"
+    android:background="@color/colorBackground"
     android:paddingRight="25dp"
     android:paddingBottom="30dp">
 
@@ -48,7 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:inputType="textMultiLine|textNoSuggestions"
-            android:text="change how long advertisement stays muted before playback continues"
+            android:text="@string/delay_desc"
             android:textColor="#C4BCAF"
             android:textSize="@dimen/normal_text_small" />
 
@@ -84,7 +84,7 @@
             android:layout_marginTop="10dp"
             android:inputType="textMultiLine|textNoSuggestions"
             android:scrollHorizontally="false"
-            android:text="0 seconds"
+            android:text="@string/delay_seconds_zero"
             android:textAlignment="center"
             android:textColor="#C4BCAF"
             android:textSize="@dimen/normal_text_small" />

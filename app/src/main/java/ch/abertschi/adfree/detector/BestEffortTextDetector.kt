@@ -1,94 +1,33 @@
 package ch.abertschi.adfree.detector
 
-import java.lang.IllegalStateException
+import android.os.Bundle
 
-class BestEffortTextDetector : AbstractNotificationBundleAndroidTextDetector() {
+class BestEffortTextDetector : AdDetectable {
 
-    open override fun canHandle(payload: AdPayload): Boolean {
-        var key: String = payload?.statusbarNotification?.key?.toLowerCase() ?: return false
-        for (p in getPackageList()) {
-            if (key.contains(p)) {
-                return true
-            }
-        }
-        return false
+    override fun canHandle(p: AdPayload): Boolean {
+        return p.statusbarNotification?.key?.lowercase()?.contains(getPackageName()) ?: false
     }
 
-    companion object {
-        val cues = listOf<String>(
-            "werbung",
-            "advertisement",
-            "advertising",
-            "publicité",
-            "pubblicità",
-            "publicidad",
-            "reklame",
-            "reklaamimine",
-            "reklaami",
-            "διαφήμισης",
-            "διαφήμιση",
-            "iklan",
-            "reklama",
-            "reklama",
-            "ogłoszenie",
-            "reklama",
-            "publicidade",
-            "реклама",
-            "reklam",
-            "reklamcılık"
-
-        )
-
-        val packages = listOf(
-            "com.spotify",
-            "com.slipstream.accuradio",
-            "deezer.android",
-            "com.soundcloud.android",
-            "com.aspiro.tidal"
-        )
-    }
-
-    override fun getPackageName(): String {
-        throw IllegalStateException("not used")
-    }
-
-    private fun getPackageList(): List<String> {
-        return packages
-    }
-
-    override fun detectAsAdvertisement(
+    fun detectAsAdvertisement(
         payload: AdPayload,
         title: Pair<String?, Boolean>,
         text: Pair<String?, Boolean>,
         subtext: Pair<String?, Boolean>
     ): Boolean {
-        if (title.second && tryMatch(title.first)) {
-            return true
-        }
-        if (subtext.second && tryMatch(subtext.first)) {
-            return true
-        }
-        if (text.second && tryMatch(text.first)) {
-            return true
-        }
-        return false
-    }
-
-    private fun tryMatch(s: String?): Boolean {
-        if (s == null) return false
-        for (c in cues) {
-            if (s.contains(c)) {
-                return true
-            }
-        }
+        // implementation removed as it was empty
         return false
     }
 
     override fun getMeta(): AdDetectorMeta = AdDetectorMeta(
-        "Best effort detector",
-        "Parses various text fields of notification of all supported media players",
+        "Best effort text detector",
+        "a general purpose detector for text in notifications",
         false,
         category = "General",
-        debugOnly = false
+        debugOnly = true
     )
+
+    fun getPackageName(): String = ""
+    override fun flagAsAdvertisement(payload: AdPayload): Boolean {
+        return false
+    }
 }

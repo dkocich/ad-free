@@ -1,15 +1,14 @@
 package ch.abertschi.adfree.detector
 
 import android.app.Notification
-import org.jetbrains.anko.AnkoLogger
 
-class DeezerTextDetector : AdDetectable, AnkoLogger {
+class DeezerTextDetector : AdDetectable {
 
     private val keyword: String = "deezer"
     private val pack = "deezer.android"
 
-    override fun canHandle(payload: AdPayload): Boolean {
-        return payload?.statusbarNotification?.key?.toLowerCase()?.contains(pack) ?: false
+    override fun canHandle(p: AdPayload): Boolean {
+        return p.statusbarNotification?.key?.lowercase()?.contains(pack) ?: false
     }
 
 //    Format:
@@ -21,8 +20,8 @@ class DeezerTextDetector : AdDetectable, AnkoLogger {
 //    <null/>
 
     override fun flagAsAdvertisement(payload: AdPayload): Boolean {
-        val extras = payload.statusbarNotification?.notification?.extras
-        val title: String? = extras?.getString(Notification.EXTRA_TITLE)?.trim()?.toLowerCase()
+        val extras = payload.statusbarNotification.notification?.extras
+        val title: String? = extras?.getString(Notification.EXTRA_TITLE)?.trim()?.lowercase()
         val subTitle: String? = extras?.getString(Notification.EXTRA_SUB_TEXT)
 
         return title != null && title == keyword

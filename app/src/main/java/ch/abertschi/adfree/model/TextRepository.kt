@@ -2,9 +2,8 @@ package ch.abertschi.adfree.model
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 import com.thoughtworks.xstream.XStream
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.info
 import java.lang.IllegalStateException
 import java.util.*
 import kotlin.collections.ArrayList
@@ -35,11 +34,12 @@ data class TextRepositoryData(
 }
 
 
-class TextRepository : AnkoLogger {
+class TextRepository {
     private val context: Context
     private val ID_KEY: String = "k_"
     private val ID_KEYS: String = "keys"
     private val ID_USE_REFLECTION_FOR_MATCH = "_use_reflection"
+    private val TAG: String = "TextRepository"
 
     private var dataEntries: ArrayList<TextRepositoryData>
 
@@ -47,14 +47,14 @@ class TextRepository : AnkoLogger {
 
     private var sharedPreferences: SharedPreferences
 
-    constructor(context: Context, sharedPreferences: PreferencesFactory) {
+    constructor(context: Context, sharedPreferences: SharedPreferences) {
         this.context = context
-        this.sharedPreferences = sharedPreferences.getPreferences()
+        this.sharedPreferences = sharedPreferences
         dataEntries = deserializeAllEntries()
     }
 
     private fun getKeys(): MutableSet<String> {
-        return sharedPreferences.getStringSet(ID_KEYS, HashSet<String>())
+        return sharedPreferences.getStringSet(ID_KEYS, HashSet<String>())!!
     }
 
 
@@ -102,8 +102,8 @@ class TextRepository : AnkoLogger {
             throw IllegalStateException("data entry not known")
         }
         var key = formatKey(data._id)
-        info("storing text: " + key)
-        info("storing text: " + data)
+        Log.i(TAG, "storing text: " + key)
+        Log.i(TAG, "storing text: " + data)
 
         var keys = getKeys()
         keys.add(key)

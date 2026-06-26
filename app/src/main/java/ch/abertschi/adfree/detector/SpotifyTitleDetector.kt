@@ -7,7 +7,6 @@
 package ch.abertschi.adfree.detector
 
 import ch.abertschi.adfree.model.TrackRepository
-import org.jetbrains.anko.AnkoLogger
 
 /**
  * AdDetectable that checks for the Keyword Spotify
@@ -18,7 +17,7 @@ import org.jetbrains.anko.AnkoLogger
  */
 // TODO: add option to tag ads manually
 class SpotifyTitleDetector(val trackRepository: TrackRepository) :
-        AbstractSpStatusBarDetector(), AnkoLogger {
+        AbstractSpStatusBarDetector() {
 
     private val keywords = listOf(
             "Spotify —"
@@ -30,10 +29,10 @@ class SpotifyTitleDetector(val trackRepository: TrackRepository) :
     }
 
     override fun flagAsAdvertisement(payload: AdPayload): Boolean
-            = getTitle(payload)?.toLowerCase()?.trim()?.run {
+            = getTitle(payload)?.lowercase()?.trim()?.run {
         var isAdd = false
         for(k in keywords) {
-            isAdd = isAdd || k.toLowerCase() == this
+            isAdd = isAdd || k.lowercase() == this
         }
         isAdd }?: false
 
@@ -41,7 +40,7 @@ class SpotifyTitleDetector(val trackRepository: TrackRepository) :
             = getTitle(payload).let { trackRepository.getAllTracks().contains(it) }
 
     fun getTitle(payload: AdPayload): String?
-            = payload?.statusbarNotification?.notification?.tickerText?.toString() ?: ""
+            = payload.statusbarNotification?.notification?.tickerText?.toString() ?: ""
 
     override fun getMeta(): AdDetectorMeta
             = AdDetectorMeta("Notification text", "spotify detector for text in notification", category = "Spotify")

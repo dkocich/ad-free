@@ -3,21 +3,22 @@ package ch.abertschi.adfree.detector
 import android.app.Notification
 import android.os.Bundle
 import android.text.SpannableString
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.warn
+import android.util.Log
 
 /**
  * Perform inspection of miui notification bundles
  */
-class MiuiNotificationDetector : AbstractSpStatusBarDetector(), AnkoLogger {
+class MiuiNotificationDetector : AbstractSpStatusBarDetector() {
+
+    private val TAG: String = "MiuiNotificationDetector"
 
     override fun canHandle(payload: AdPayload): Boolean =
-        super.canHandle(payload) && payload?.statusbarNotification?.notification != null
+        super.canHandle(payload) && payload.statusbarNotification?.notification != null
 
 
     override fun flagAsAdvertisement(payload: AdPayload): Boolean {
         var flagAsAd = false
-        val bundle = getNotificationBundle(payload!!.statusbarNotification!!.notification)
+        val bundle = getNotificationBundle(payload.statusbarNotification.notification)
 
         // Notification content:
         //
@@ -38,7 +39,7 @@ class MiuiNotificationDetector : AbstractSpStatusBarDetector(), AnkoLogger {
                 }
             }
         } catch (e: java.lang.Exception) {
-            warn("Cant apply miui listener, $e")
+            Log.w(TAG, "Cant apply miui listener, $e")
         }
         return flagAsAd
     }
@@ -49,7 +50,7 @@ class MiuiNotificationDetector : AbstractSpStatusBarDetector(), AnkoLogger {
             f.isAccessible = true
             return f.get(sp) as Int?
         } catch (e: Exception) {
-            warn("Can not access notification mSpanCount with reflection, $e")
+            Log.w(TAG, "Can not access notification mSpanCount with reflection, $e")
         }
         return null
     }
@@ -60,7 +61,7 @@ class MiuiNotificationDetector : AbstractSpStatusBarDetector(), AnkoLogger {
             f.isAccessible = true
             return f.get(notification) as Bundle
         } catch (e: Exception) {
-            warn("Can not access notification bundle with reflection, $e")
+            Log.w(TAG, "Can not access notification bundle with reflection, $e")
         }
         return null
     }

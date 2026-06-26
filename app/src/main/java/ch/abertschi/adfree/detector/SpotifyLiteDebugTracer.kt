@@ -1,9 +1,8 @@
 package ch.abertschi.adfree.detector
 
-import org.jetbrains.anko.AnkoLogger
 import java.io.File
 
-class SpotifyLiteDebugTracer(storageFolder: File?) : AdDetectable, AnkoLogger,
+class SpotifyLiteDebugTracer(storageFolder: File?) : AdDetectable,
     AbstractDebugTracer(storageFolder) {
 
     private val PACKAGE = "com.spotify.lite"
@@ -18,4 +17,8 @@ class SpotifyLiteDebugTracer(storageFolder: File?) : AdDetectable, AnkoLogger,
         category = "Developer",
         debugOnly = true
     )
+
+    override fun canHandle(p: AdPayload): Boolean {
+        return super.canHandle(p)
+    }
 }

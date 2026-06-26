@@ -1,30 +1,24 @@
 package ch.abertschi.adfree.view.mod
 
 import android.annotation.SuppressLint
-import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.SwitchCompat
-import android.text.Html
-
-import android.view.View
-
-import android.widget.TextView
-
-import android.support.v7.app.AlertDialog
-import android.widget.SeekBar
-
-
-import android.view.LayoutInflater
-import ch.abertschi.adfree.AdFreeApplication
-import ch.abertschi.adfree.R
-import org.jetbrains.anko.*
-
 import android.content.Intent
 import android.net.Uri
-import ch.abertschi.adfree.BuildConfig
+import android.os.Build
+import android.os.Bundle
+import android.text.Html
+import android.view.LayoutInflater
+import android.view.View
+import android.widget.SeekBar
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SwitchCompat
+import ch.abertschi.adfree.AdFreeApplication
+import ch.abertschi.adfree.R
 
 
-class ModActivity : AppCompatActivity(), AnkoLogger {
+class ModActivity : AppCompatActivity() {
 
     private lateinit var delayDialog: AlertDialog
 
@@ -46,41 +40,45 @@ class ModActivity : AppCompatActivity(), AnkoLogger {
         val text =
                 "change how <font color=#FFFFFF>ad-free</font> " +
                         "internally works."
-        textView.text = Html.fromHtml(text)
+        textView.text = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Html.fromHtml(text, Html.FROM_HTML_MODE_LEGACY)
+        } else {
+            Html.fromHtml(text)
+        }
 
         val factory = LayoutInflater.from(this)
         delayLayout = factory.inflate(R.layout.mod_delay_unmute, null)
 
         enabledSwitch = findViewById(R.id.enableAdfreeSwitch)
 
-        findViewById<View>(R.id.enableText).onClick { presenter.onEnableToggleChanged() }
-        findViewById<View>(R.id.enableSubtext).onClick { presenter.onEnableToggleChanged() }
-        findViewById<View>(R.id.enabledLayout).onClick { presenter.onEnableToggleChanged() }
-        findViewById<View>(R.id.enableAdfreeSwitch).onClick { presenter.onEnableToggleChanged() }
+        findViewById<View>(R.id.enableText).setOnClickListener { presenter.onEnableToggleChanged() }
+        findViewById<View>(R.id.enableSubtext).setOnClickListener { presenter.onEnableToggleChanged() }
+        findViewById<View>(R.id.enabledLayout).setOnClickListener { presenter.onEnableToggleChanged() }
+        findViewById<View>(R.id.enableAdfreeSwitch).setOnClickListener { presenter.onEnableToggleChanged() }
 
 
-        findViewById<View>(R.id.delay_unmute_mod_layout).onClick { presenter.onDelayUnmute() }
-        findViewById<View>(R.id.delay_unmute_mod_title).onClick { presenter.onDelayUnmute() }
-        findViewById<View>(R.id.delay_unmute_mod_subtitle).onClick { presenter.onDelayUnmute() }
+        findViewById<View>(R.id.delay_unmute_mod_layout).setOnClickListener { presenter.onDelayUnmute() }
+        findViewById<View>(R.id.delay_unmute_mod_title).setOnClickListener { presenter.onDelayUnmute() }
+        findViewById<View>(R.id.delay_unmute_mod_subtitle).setOnClickListener { presenter.onDelayUnmute() }
 
-        findViewById<View>(R.id.always_on_layout).onClick { presenter.onToggleAlwaysOnChanged() }
-        findViewById<View>(R.id.always_on_text).onClick { presenter.onToggleAlwaysOnChanged() }
-        findViewById<View>(R.id.always_on_subtext).onClick { presenter.onToggleAlwaysOnChanged() }
-        findViewById<View>(R.id.always_on_switch).onClick { presenter.onToggleAlwaysOnChanged() }
+        findViewById<View>(R.id.always_on_layout).setOnClickListener { presenter.onToggleAlwaysOnChanged() }
+        findViewById<View>(R.id.always_on_text).setOnClickListener { presenter.onToggleAlwaysOnChanged() }
+        findViewById<View>(R.id.always_on_subtext).setOnClickListener { presenter.onToggleAlwaysOnChanged() }
+        findViewById<View>(R.id.always_on_switch).setOnClickListener { presenter.onToggleAlwaysOnChanged() }
 
-        findViewById<View>(R.id.active_detectors_layout).onClick { presenter.onLaunchActiveDetectorsView() }
-        findViewById<View>(R.id.active_detectors_title).onClick { presenter.onLaunchActiveDetectorsView() }
-        findViewById<View>(R.id.active_detectors_subtitle).onClick { presenter.onLaunchActiveDetectorsView() }
+        findViewById<View>(R.id.active_detectors_layout).setOnClickListener { presenter.onLaunchActiveDetectorsView() }
+        findViewById<View>(R.id.active_detectors_title).setOnClickListener { presenter.onLaunchActiveDetectorsView() }
+        findViewById<View>(R.id.active_detectors_subtitle).setOnClickListener { presenter.onLaunchActiveDetectorsView() }
 
-        findViewById<TextView>(R.id.mod_status_service).onClick {
+        findViewById<TextView>(R.id.mod_status_service).setOnClickListener {
             presenter.onLaunchNotificationListenerSystemSettings()
         }
 
         val versionView = findViewById<TextView>(R.id.mod_version1)
         versionView.text =
-                "> version ${BuildConfig.VERSION_NAME} / ${BuildConfig.VERSION_CODE}"
+                "> version 1.0 / 1"
 
-        versionView.onClick {
+        versionView.setOnClickListener {
             val browserIntent = Intent(Intent.ACTION_VIEW,
                     Uri.parse("https://github.com/abertschi/ad-free/blob/master/CHANGELOG.md"))
             this.startActivity(browserIntent)
@@ -121,7 +119,7 @@ class ModActivity : AppCompatActivity(), AnkoLogger {
 
     fun showDelayUnmute() {
         delayDialog.show()
-        delayDialog.window.setBackgroundDrawableResource(R.color.colorBackground)
+        delayDialog.window?.setBackgroundDrawableResource(R.color.colorBackground)
     }
 
     fun setDelayValue(p: Int) {
@@ -145,12 +143,11 @@ class ModActivity : AppCompatActivity(), AnkoLogger {
 
     fun setNotificationEnabled(b: Boolean) {
         alwaysOnSwitch?.isChecked = b
-        info { "always On: $b" }
     }
 
     fun showPowerEnabled() {
-        this.applicationContext?.runOnUiThread {
-            toast("ad-free enabled")
+        this.runOnUiThread {
+            Toast.makeText(this, "ad-free enabled", Toast.LENGTH_LONG).show()
         }
     }
 
@@ -175,16 +172,15 @@ class ModActivity : AppCompatActivity(), AnkoLogger {
     fun showDeveloperModeFeatures() {
         val view = findViewById<View>(R.id.google_cast_layout)
         view.visibility = View.VISIBLE
-        view.onClick {
+        view.setOnClickListener {
             presenter.onGoogleCastToggle()
         }
-        findViewById<View>(R.id.google_cast_title).onClick { presenter.onGoogleCastToggle() }
-        findViewById<View>(R.id.google_cast_subtitle).onClick {
-            // info { "on notification listener connected" }
+        findViewById<View>(R.id.google_cast_title).setOnClickListener { presenter.onGoogleCastToggle() }
+        findViewById<View>(R.id.google_cast_subtitle).setOnClickListener {
             val browserIntent = Intent(Intent.ACTION_VIEW,
                     Uri.parse("https://support.google.com/chromecast/answer/7206638?hl=en"))
             this.startActivity(browserIntent)
         }
-        findViewById<View>(R.id.google_cast_switch).onClick { presenter.onGoogleCastToggle() }
+        findViewById<View>(R.id.google_cast_switch).setOnClickListener { presenter.onGoogleCastToggle() }
     }
 }

@@ -8,27 +8,22 @@ package ch.abertschi.adfree
 
 import android.app.Activity
 import android.app.Application
-import android.content.Context
-import android.os.AsyncTask
 import ch.abertschi.adfree.ad.AdDetector
+import ch.abertschi.adfree.crashhandler.CrashExceptionHandler
+import ch.abertschi.adfree.model.*
 import ch.abertschi.adfree.plugin.AdPlugin
 import ch.abertschi.adfree.plugin.PluginHandler
-import ch.abertschi.adfree.plugin.interdimcable.InterdimCablePlugin
 import ch.abertschi.adfree.plugin.localmusic.LocalMusicPlugin
 import ch.abertschi.adfree.plugin.mute.MutePlugin
 import ch.abertschi.adfree.util.NotificationUtils
-import org.jetbrains.anko.AnkoLogger
-import ch.abertschi.adfree.crashhandler.CrashExceptionHandler
-import ch.abertschi.adfree.model.*
-import com.thoughtworks.xstream.mapper.Mapper
-import java.lang.NullPointerException
+import java.util.concurrent.Executors
 
 
 /**
  * Created by abertschi on 21.04.17.
  */
 
-class AdFreeApplication : Application(), AnkoLogger {
+class AdFreeApplication : Application() {
 
     lateinit var prefs: PreferencesFactory
     lateinit var adDetectors: AdDetectableFactory
@@ -39,7 +34,6 @@ class AdFreeApplication : Application(), AnkoLogger {
     lateinit var adStateController: AdStateController
     lateinit var notificationUtils: NotificationUtils
     lateinit var notificationChannel: NotificationChannel
-    lateinit var yesNoModel: YesNoModel
     lateinit var remoteManager: RemoteManager
     lateinit var notificationStatus: NotificationStatusManager
     lateinit var googleCast: GoogleCastManager
@@ -52,7 +46,7 @@ class AdFreeApplication : Application(), AnkoLogger {
         Thread.setDefaultUncaughtExceptionHandler(CrashExceptionHandler(this))
 
         prefs = PreferencesFactory(applicationContext)
-        textRepository = TextRepository(this, prefs)
+        textRepository = TextRepository(this, prefs.getPreferences())
 
         googleCast = GoogleCastManager(prefs)
         notificationStatus = NotificationStatusManager(applicationContext)
@@ -63,14 +57,11 @@ class AdFreeApplication : Application(), AnkoLogger {
         remoteManager = RemoteManager(prefs)
         adDetector = AdDetector(adDetectors, remoteManager)
 
-        yesNoModel = YesNoModel(this)
-        yesNoModel.getRandomYes()
-
         notificationUtils = NotificationUtils(applicationContext)
         notificationChannel = NotificationChannel(notificationUtils, prefs)
 
         adPlugins = listOf(
-            MutePlugin(), LocalMusicPlugin(applicationContext, prefs, audioManager, yesNoModel)
+            MutePlugin(), LocalMusicPlugin(applicationContext, prefs, audioManager)
 
             // XXX: We no longer support Interdimensional cable
 //                ,InterdimCablePlugin(prefs, audioManager, applicationContext, notificationChannel)
@@ -86,7 +77,7 @@ class AdFreeApplication : Application(), AnkoLogger {
 
         notificationStatus.restartNotificationListener()
 
-        AsyncTask.execute {
+        Executors.newSingleThreadExecutor().execute {
             if (prefs.isAlwaysOnNotificationEnabled()) {
                 notificationStatus.forceTimedRestart()
             }

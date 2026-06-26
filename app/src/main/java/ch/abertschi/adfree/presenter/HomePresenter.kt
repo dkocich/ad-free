@@ -11,25 +11,19 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
-import ch.abertschi.adfree.BuildConfig
+import android.util.Log
 import ch.abertschi.adfree.model.PreferencesFactory
 import ch.abertschi.adfree.model.RemoteManager
 import ch.abertschi.adfree.model.RemoteSetting
-
 import ch.abertschi.adfree.view.home.HomeView
-
-
-
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.info
 
 /**
  * Created by abertschi on 15.04.17.
  */
 class HomePresenter(val homeView: HomeView, val preferencesFactory: PreferencesFactory,
-                    val remoteManager: RemoteManager)
-    : AnkoLogger {
+                    val remoteManager: RemoteManager) {
 
+    private val TAG: String = "HomePresenter"
     private var isInit: Boolean = false
     private var remoteSetting: RemoteSetting? = null
 
@@ -42,11 +36,11 @@ class HomePresenter(val homeView: HomeView, val preferencesFactory: PreferencesF
 
     private fun onRemoteSettingUpdate(s: RemoteSetting) {
         remoteSetting = s
-        info { "current version code: " + BuildConfig.VERSION_CODE }
-        info { "setting version code: " + s.versionCode }
-//        info { s.toString() }
-        if (s.versionCode > BuildConfig.VERSION_CODE && s.versionNotify) {
-            info { "new version available. showing ui element to update" }
+        Log.i(TAG, "current version code: " + 1)
+        Log.i(TAG, "setting version code: " + s.versionCode)
+//        Log.i(TAG, { s.toString() })
+        if (s.versionCode > 1 && s.versionNotify) {
+            Log.i(TAG, "new version available. showing ui element to update")
             homeView.showUpdateMessage(true)
         }
     }

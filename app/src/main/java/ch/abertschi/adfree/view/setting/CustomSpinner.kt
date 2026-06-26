@@ -1,25 +1,24 @@
-/*
- * Ad Free
- * Copyright (c) 2017 by abertschi, www.abertschi.ch
- * See the file "LICENSE" for the full license governing this code.
- */
-
 package ch.abertschi.adfree.view.setting
 
 import android.content.Context
 import android.util.AttributeSet
-import android.widget.Spinner
+import androidx.appcompat.widget.AppCompatSpinner
 
-/**
- * Created by abertschi on 23.04.17.
- */
-class CustomSpinner @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : Spinner(context, attrs, defStyleAttr) {
 
-    var selectedIndex: Int = 0
+class CustomSpinner : AppCompatSpinner {
 
-    open fun onDetechedFromWindow() {
-        super.onDetachedFromWindow()
+    private var listener: OnItemSelectedListener? = null
+
+    constructor(context: Context) : super(context)
+    constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
+
+    override fun setSelection(position: Int) {
+        super.setSelection(position)
+        listener?.onItemSelected(this, selectedView, position, selectedItemId)
+    }
+
+    override fun setOnItemSelectedListener(listener: OnItemSelectedListener?) {
+        this.listener = listener
     }
 }

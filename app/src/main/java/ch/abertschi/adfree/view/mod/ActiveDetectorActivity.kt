@@ -1,28 +1,23 @@
 package ch.abertschi.adfree.view.mod
 
-import android.opengl.Visibility
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.text.Html
-
-import android.widget.TextView
-
-
 import android.view.LayoutInflater
-import ch.abertschi.adfree.R
-import org.jetbrains.anko.*
-
-import android.support.v7.widget.RecyclerView
-import android.view.ViewGroup
-
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.SwitchCompat
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ScrollView
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SwitchCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import ch.abertschi.adfree.R
 import ch.abertschi.adfree.detector.AdDetectable
 import java.lang.IllegalStateException
 
-class ActiveDetectorActivity : AppCompatActivity(), AnkoLogger {
+
+class ActiveDetectorActivity : AppCompatActivity() {
 
     private lateinit var detectorRecyclerView: RecyclerView
     private lateinit var detectorViewAdapter: RecyclerView.Adapter<*>
@@ -38,7 +33,7 @@ class ActiveDetectorActivity : AppCompatActivity(), AnkoLogger {
 
         presenter = ActiveDetectorPresenter(this)
 
-        val category: String = intent.extras.getString(CategoriesPresenter.BUNDLE_CATEGORY_KEY)
+        val category: String = intent.extras?.getString(CategoriesPresenter.BUNDLE_CATEGORY_KEY)
             ?: throw  IllegalStateException("must set category")
 
         val text =
@@ -58,7 +53,7 @@ class ActiveDetectorActivity : AppCompatActivity(), AnkoLogger {
     }
 
     fun showInfo(info: String) {
-        longToast(info)
+        Toast.makeText(this, info, Toast.LENGTH_LONG).show()
     }
 }
 
@@ -66,7 +61,7 @@ class DetectorAdapter(
     private val detectors: List<AdDetectable>,
     private val presenter: ActiveDetectorPresenter
 ) :
-    RecyclerView.Adapter<DetectorAdapter.MyViewHolder>(), AnkoLogger {
+    RecyclerView.Adapter<DetectorAdapter.MyViewHolder>() {
 
     class MyViewHolder(
         val view: View,
@@ -95,20 +90,19 @@ class DetectorAdapter(
         holder.subtitle.text = detectors[position].getMeta().description
         holder.switch.isChecked = presenter.isEnabled(detectors[position])
 
-        holder.title.onClick {
+        holder.title.setOnClickListener {
             holder.switch.toggle()
         }
-        holder.subtitle.onClick {
+        holder.subtitle.setOnClickListener {
             holder.switch.toggle()
         }
 
-        holder.view.onClick {
+        holder.view.setOnClickListener {
             holder.switch.toggle()
         }
 
         holder.switch.setOnCheckedChangeListener { _, isChecked ->
             presenter.onDetectorToggled(isChecked, detectors[position])
-            info(detectors[position].javaClass.canonicalName)
         }
         holder.sepView.visibility =
             if (position == detectors.size - 1) View.INVISIBLE else View.VISIBLE

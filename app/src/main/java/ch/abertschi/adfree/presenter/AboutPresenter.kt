@@ -7,32 +7,30 @@
 package ch.abertschi.adfree.presenter
 
 import android.content.Context
+import android.content.Intent
 import ch.abertschi.adfree.model.PreferencesFactory
 import ch.abertschi.adfree.view.about.AboutView
-import org.jetbrains.anko.AnkoLogger
-import android.content.Intent
 import ch.abertschi.adfree.view.mod.ModActivity
 
 
 /**
  * Created by abertschi on 02.09.17.
  */
-class AboutPresenter(val view: AboutView, val preferencesFactory: PreferencesFactory, val context: Context)
-    : AnkoLogger {
+class AboutPresenter(val view: AboutView, val preferencesFactory: PreferencesFactory, val context: Context) {
 
     private var isInit: Boolean = false
 
 
-    fun onCreate(context: Context) {
+    fun onCreate() {
         isInit = true
     }
 
-    fun onResume(context: Context) {
+    fun onResume() {
     }
 
     fun showMoreSettings() {
         val myIntent = Intent(context, ModActivity::class.java)
-        this.context!!.startActivity(myIntent)
+        this.context.startActivity(myIntent)
 
     }
     

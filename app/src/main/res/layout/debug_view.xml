@@ -6,7 +6,7 @@
     android:id="@+id/crash_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#252A2E"
+    android:background="@color/colorBackground"
     android:orientation="vertical"
 
     >
@@ -81,7 +81,7 @@
                 android:layout_height="match_parent"
                 android:inputType="textMultiLine|textNoSuggestions"
                 android:scrollHorizontally="false"
-                android:text="ad-free not working?"
+                android:text="@string/debug_not_working"
                 android:textColor="#C4BCAF"
                 android:textSize="@dimen/title_text_size"
 
@@ -148,7 +148,7 @@
                 android:inputType="textMultiLine|textNoSuggestions"
                 android:scrollHorizontally="false"
 
-                android:text="run spotify for a while so ads can appear and be captured."
+                android:text="@string/debug_run_spotify"
                 android:textColor="#C4BCAF"
                 android:textSize="@dimen/normal_text_size"
                 />
@@ -162,7 +162,7 @@
                 android:inputType="textMultiLine|textNoSuggestions"
                 android:scrollHorizontally="false"
 
-                android:text="> send logs"
+                android:text="@string/debug_send_logs"
                 android:textColor="#FFFFFF"
                 android:textSize="@dimen/normal_text_size"
                 />

@@ -6,24 +6,21 @@
 
 package ch.abertschi.adfree.presenter
 
-import android.content.Context
 import ch.abertschi.adfree.model.PreferencesFactory
 import ch.abertschi.adfree.view.about.AboutView
-import org.jetbrains.anko.AnkoLogger
 
 /**
  * Created by abertschi on 02.09.17.
  */
-class MainActivityPresenter(val view: AboutView, val preferencesFactory: PreferencesFactory)
-    : AnkoLogger {
+class MainActivityPresenter(val view: AboutView, val preferencesFactory: PreferencesFactory) {
 
     private var isInit: Boolean = false
 
-    fun onCreate(context: Context) {
+    fun onCreate() {
         isInit = true
     }
 
-    fun onResume(context: Context) {
+    fun onResume() {
     }
 
 }

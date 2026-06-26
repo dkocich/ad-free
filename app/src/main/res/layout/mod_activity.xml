@@ -9,7 +9,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#252A2E"
+    android:background="@color/colorBackground"
     android:orientation="vertical"
     android:padding="@dimen/margin_view">
 
@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:inputType="textMultiLine|textNoSuggestions"
         android:scrollHorizontally="false"
-        android:text="change how ad-free internally works"
+        android:text="@string/mod_subtitle"
         android:textColor="#C4BCAF"
         android:textSize="@dimen/title_text_size" />
 
@@ -66,7 +66,7 @@
                             android:layout_alignParentTop="true"
                             android:inputType="textMultiLine|textNoSuggestions"
                             android:scrollHorizontally="false"
-                            android:text="> ad-free"
+                            android:text="@string/mod_adfree"
                             android:textColor="#FFFFFF"
                             android:textSize="@dimen/normal_text_size" />
 
@@ -78,7 +78,7 @@
                             android:layout_marginTop="@dimen/margin_title_subtitle"
                             android:inputType="textMultiLine|textNoSuggestions"
                             android:scrollHorizontally="false"
-                            android:text="enabled"
+                            android:text="@string/mod_enabled"
                             android:textColor="#C4BCAF"
                             android:textSize="@dimen/normal_text_small" />
                     </LinearLayout>
@@ -129,7 +129,7 @@
                             android:layout_alignParentTop="true"
                             android:inputType="textMultiLine|textNoSuggestions"
                             android:scrollHorizontally="false"
-                            android:text="> ad detectors"
+                            android:text="@string/mod_ad_detectors"
                             android:textColor="#FFFFFF"
                             android:textSize="@dimen/normal_text_size" />
 
@@ -141,7 +141,7 @@
                             android:layout_marginTop="@dimen/margin_title_subtitle"
                             android:inputType="textMultiLine|textNoSuggestions"
                             android:scrollHorizontally="false"
-                            android:text="choose active detectors"
+                            android:text="@string/mod_choose_detectors"
                             android:textColor="#C4BCAF"
                             android:textSize="@dimen/normal_text_small" />
                     </LinearLayout>
@@ -182,7 +182,7 @@
                             android:layout_alignParentTop="true"
                             android:inputType="textMultiLine|textNoSuggestions"
                             android:scrollHorizontally="false"
-                            android:text="> delay unmute"
+                            android:text="@string/mod_delay_unmute"
                             android:textColor="#FFFFFF"
                             android:textSize="@dimen/normal_text_size" />
 
@@ -194,7 +194,7 @@
                             android:layout_marginTop="@dimen/margin_title_subtitle"
                             android:inputType="textMultiLine|textNoSuggestions"
                             android:scrollHorizontally="false"
-                            android:text="not delayed"
+                            android:text="@string/mod_not_delayed"
                             android:textColor="#C4BCAF"
                             android:textSize="@dimen/normal_text_small" />
                     </LinearLayout>
@@ -235,7 +235,7 @@
                             android:layout_alignParentTop="true"
                             android:inputType="textMultiLine|textNoSuggestions"
                             android:scrollHorizontally="false"
-                            android:text="> always-on notification"
+                            android:text="@string/mod_always_on"
                             android:textColor="#FFFFFF"
                             android:textSize="@dimen/normal_text_size" />
 
@@ -247,7 +247,7 @@
                             android:layout_marginTop="@dimen/margin_title_subtitle"
                             android:inputType="textMultiLine|textNoSuggestions"
                             android:scrollHorizontally="false"
-                            android:text="prevents ad-free form being killed by Android OS. leave disabled unless you run into issues."
+                            android:text="@string/mod_always_on_desc"
                             android:textColor="#C4BCAF"
                             android:textSize="@dimen/normal_text_small" />
                     </LinearLayout>
@@ -300,7 +300,7 @@
                             android:layout_alignParentTop="true"
                             android:inputType="textMultiLine|textNoSuggestions"
                             android:scrollHorizontally="false"
-                            android:text="> mute chromecast audio"
+                            android:text="@string/mod_mute_chromecast"
                             android:textColor="#FFFFFF"
                             android:textSize="@dimen/normal_text_size" />
 

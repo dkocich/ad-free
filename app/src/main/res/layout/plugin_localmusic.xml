@@ -36,7 +36,7 @@ xmlns:android="http://schemas.android.com/apk/res/android"-->
                     android:layout_alignParentTop="true"
                     android:inputType="textMultiLine|textNoSuggestions"
                     android:scrollHorizontally="false"
-                    android:text="> audio volume"
+                    android:text="@string/lm_audio_volume"
                     android:textColor="#FFFFFF"
                     android:textSize="@dimen/normal_text_size" />
 
@@ -48,7 +48,7 @@ xmlns:android="http://schemas.android.com/apk/res/android"-->
                     android:layout_marginTop="@dimen/margin_title_subtitle"
                     android:inputType="textMultiLine|textNoSuggestions"
                     android:scrollHorizontally="false"
-                    android:text="configure volume of playback"
+                    android:text="@string/lm_audio_volume_desc"
                     android:textColor="#C4BCAF"
                     android:textSize="@dimen/normal_text_small" />
             </LinearLayout>
@@ -89,7 +89,7 @@ xmlns:android="http://schemas.android.com/apk/res/android"-->
                     android:layout_alignParentTop="true"
                     android:inputType="textMultiLine|textNoSuggestions"
                     android:scrollHorizontally="false"
-                    android:text="> music directory"
+                    android:text="@string/lm_music_dir"
                     android:textColor="#FFFFFF"
                     android:textSize="@dimen/normal_text_size" />
 
@@ -101,7 +101,7 @@ xmlns:android="http://schemas.android.com/apk/res/android"-->
                     android:layout_marginTop="@dimen/margin_title_subtitle"
                     android:inputType="textMultiLine|textNoSuggestions"
                     android:scrollHorizontally="false"
-                    android:text="directory is not set"
+                    android:text="@string/lm_dir_not_set"
                     android:textColor="#C4BCAF"
                     android:textSize="@dimen/normal_text_small" />
             </LinearLayout>
@@ -142,7 +142,7 @@ xmlns:android="http://schemas.android.com/apk/res/android"-->
                     android:layout_alignParentTop="true"
                     android:inputType="textMultiLine|textNoSuggestions"
                     android:scrollHorizontally="false"
-                    android:text="> play until end"
+                    android:text="@string/lm_play_until_end"
                     android:textColor="#FFFFFF"
                     android:textSize="@dimen/normal_text_size" />
 
@@ -154,7 +154,7 @@ xmlns:android="http://schemas.android.com/apk/res/android"-->
                     android:layout_marginTop="@dimen/margin_title_subtitle"
                     android:inputType="textMultiLine|textNoSuggestions"
                     android:scrollHorizontally="false"
-                    android:text="play music until end before unmuting ad"
+                    android:text="@string/lm_play_until_end_desc"
                     android:textColor="#C4BCAF"
                     android:textSize="@dimen/normal_text_small" />
             </LinearLayout>
@@ -206,7 +206,7 @@ xmlns:android="http://schemas.android.com/apk/res/android"-->
                     android:layout_alignParentTop="true"
                     android:inputType="textMultiLine|textNoSuggestions"
                     android:scrollHorizontally="false"
-                    android:text="> loop music"
+                    android:text="@string/lm_loop"
                     android:textColor="#FFFFFF"
                     android:textSize="@dimen/normal_text_size" />
 
@@ -218,7 +218,7 @@ xmlns:android="http://schemas.android.com/apk/res/android"-->
                     android:layout_marginTop="@dimen/margin_title_subtitle"
                     android:inputType="textMultiLine|textNoSuggestions"
                     android:scrollHorizontally="false"
-                    android:text="loop music until end of ad"
+                    android:text="@string/lm_loop_desc"
                     android:textColor="#C4BCAF"
                     android:textSize="@dimen/normal_text_small" />
             </LinearLayout>

@@ -7,15 +7,15 @@
 package ch.abertschi.adfree.plugin
 
 import android.content.Context
+import android.media.AudioAttributes
 import android.media.AudioManager
 import android.media.MediaPlayer
+import android.util.Log
 import ch.abertschi.adfree.AudioController
 import ch.abertschi.adfree.model.PreferencesFactory
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.info
 import java.util.concurrent.TimeUnit
 
 /**
@@ -23,8 +23,9 @@ import java.util.concurrent.TimeUnit
  */
 open class AudioPlayer(val context: Context,
                        val prefs: PreferencesFactory,
-                       val audioController: AudioController) : AnkoLogger {
+                       val audioController: AudioController) {
 
+    private val TAG: String = "AudioPlayer"
     private var isPlaying: Boolean = false
     private var onStopCallables: ArrayList<() -> Unit> = ArrayList()
     private var player: MediaPlayer? = null
@@ -45,7 +46,7 @@ open class AudioPlayer(val context: Context,
     }
 
     private fun playAudio(url: String, loop: Boolean = false) {
-        initializeMediaPlayerObservable(context, url).subscribe { player ->
+        initializeMediaPlayerObservable(url).subscribe { player ->
             this.player = player
             player.setOnErrorListener { _, what, _ ->
                 throw RuntimeException("Problem with audio player, code: $what")
@@ -63,7 +64,7 @@ open class AudioPlayer(val context: Context,
 
     fun forceStop(onStoped: () -> Unit) {
         closePlayer()
-        onStoped?.invoke()
+        onStoped()
     }
 
     fun stop(onStoped: () -> Unit) {
@@ -73,23 +74,27 @@ open class AudioPlayer(val context: Context,
         }
     }
 
-    private fun initializeMediaPlayerObservable(context: Context, url: String): Observable<MediaPlayer>
+    private fun initializeMediaPlayerObservable(url: String): Observable<MediaPlayer>
             = Observable.create<MediaPlayer> { source ->
         player = MediaPlayer()
         player?.setDataSource(url)
-        player?.setAudioStreamType(AudioManager.STREAM_VOICE_CALL)
+        player?.setAudioAttributes(
+            AudioAttributes.Builder()
+                .setLegacyStreamType(AudioManager.STREAM_VOICE_CALL)
+                .build()
+        )
 
         var asyncPreparationDone = false
-        info { "$asyncPreparationDone / $trackPreparationDelayCallable" }
+        Log.i(TAG, "$asyncPreparationDone / $trackPreparationDelayCallable")
         trackPreparationDelayCallable?.let {
-            info { "creating observable" }
+            Log.i(TAG, "creating observable")
             Observable.just(true)
                     .delay(500, TimeUnit.MILLISECONDS)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread()).subscribe {
-                info { "executing observable: $asyncPreparationDone" }
+                Log.i(TAG, "executing observable: $asyncPreparationDone")
                 if (!asyncPreparationDone) {
-                    info { "invoking observable" }
+                    Log.i(TAG, "invoking observable")
                     trackPreparationDelayCallable?.invoke()
                 }
             }
@@ -101,7 +106,7 @@ open class AudioPlayer(val context: Context,
             player?.setOnCompletionListener {
                 closePlayer()
                 synchronized(onStopCallables) {
-                    onStopCallables?.forEach { it() }
+                    onStopCallables.forEach { it() }
                     onStopCallables.clear()
                 }
             }

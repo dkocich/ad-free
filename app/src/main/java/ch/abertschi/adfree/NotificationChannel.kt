@@ -7,13 +7,8 @@
 package ch.abertschi.adfree
 
 import android.app.Notification
-import android.content.Context
-import android.support.v4.app.NotificationManagerCompat
 import ch.abertschi.adfree.model.PreferencesFactory
 import ch.abertschi.adfree.util.NotificationUtils
-import android.support.v4.content.ContextCompat.startActivity
-import android.content.Intent
-import ch.abertschi.adfree.view.mod.ModActivity
 
 
 /**
@@ -27,8 +22,8 @@ class NotificationChannel(val notificationUtils: NotificationUtils,
 
     fun buildAlwaysOnNotification(): Pair<Notification, Int> {
         val not = notificationUtils.showTextNotification(alwaysOnNotificationId,
-                "ad-free",
-                "Enjoy ad-free music", {
+                notificationUtils.context.getString(R.string.app_name),
+                notificationUtils.context.getString(R.string.notif_enjoy), {
             }, notifiy = false)
 
         return Pair(not , alwaysOnNotificationId)
@@ -43,7 +38,7 @@ class NotificationChannel(val notificationUtils: NotificationUtils,
     }
 
     fun showDefaultAdNotification(dismissCallable: () -> Unit = {}) {
-        notificationUtils.showTextNotification(defaultAdNotificationId, "Advertisement detected",
+        notificationUtils.showTextNotification(defaultAdNotificationId, notificationUtils.context.getString(R.string.notif_ad_detected),
                 "touch to unmute", dismissCallable)
     }
 

@@ -1,27 +1,17 @@
-/*
- * Ad Free
- * Copyright (c) 2017 by abertschi, www.abertschi.ch
- * See the file "LICENSE" for the full license governing this code.
- */
-
 package ch.abertschi.adfree.detector
 
-/**
- * Created by abertschi on 17.04.17.
- *
- * Detector which checks for number of control buttons
- */
+import android.app.Notification
+
 class NotificationActionDetector : AbstractSpStatusBarDetector() {
 
-    override fun canHandle(payload: AdPayload): Boolean =
-        super.canHandle(payload) && payload?.statusbarNotification?.notification?.actions != null
-
-    override fun flagAsAdvertisement(payload: AdPayload): Boolean =
-        payload.statusbarNotification.notification.actions.size <= 3
+    override fun flagAsAdvertisement(payload: AdPayload): Boolean {
+        // If no actions are present, we probably have an ad
+        val notification = payload.statusbarNotification.notification
+        return notification?.actions == null || notification.actions.isEmpty()
+    }
 
     override fun getMeta(): AdDetectorMeta = AdDetectorMeta(
-        "Notification actions", "spotify generic inspection of notification actions",
+        "Notification actions", "spotify detector for notification actions",
         category = "Spotify"
     )
-
 }

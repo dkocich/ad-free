@@ -10,18 +10,18 @@ import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.support.annotation.RequiresApi
-import android.support.v4.app.NotificationCompat
-import android.support.v4.app.NotificationManagerCompat
+import android.util.Log
+import androidx.annotation.RequiresApi
+import androidx.core.app.JobIntentService
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import ch.abertschi.adfree.R
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.info
 
 
 /**
  * Created by abertschi on 16.04.17.
  */
-class NotificationUtils(val context: Context) : AnkoLogger {
+class NotificationUtils(val context: Context) {
 
     public companion object {
         val actionDismiss = "actionDismiss"
@@ -130,8 +130,8 @@ class NotificationUtils(val context: Context) : AnkoLogger {
         val notificationManager = context
                 .getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val id = CHANNEL_ID
-        val name = "Ad blocking"
-        val description = "Ad blocking notification"
+        val name = context.getString(R.string.notif_channel_name)
+        val description = context.getString(R.string.notif_channel_desc)
         val importance = NotificationManager.IMPORTANCE_DEFAULT
         val channel = NotificationChannel(id, name, importance)
         // Configure the notification channel.
@@ -142,16 +142,26 @@ class NotificationUtils(val context: Context) : AnkoLogger {
     }
 
     class NotificationInteractionService :
-            IntentService(NotificationInteractionService::class.simpleName), AnkoLogger {
-        init {
-            info("NotificationInteractionService created")
+            JobIntentService() {
+
+        private val TAG: String = "NotificationInteractionService"
+
+        companion object {
+            private const val JOB_ID = 1000
+            fun enqueueWork(context: Context, work: Intent) {
+                enqueueWork(context, NotificationInteractionService::class.java, JOB_ID, work)
+            }
         }
 
-        override fun onHandleIntent(intent: Intent?) {
-            if (intent == null || intent.action == null) {
+        init {
+            Log.i(TAG, "NotificationInteractionService created")
+        }
+
+        override fun onHandleWork(intent: Intent) {
+            if (intent.action == null) {
                 return
             }
-            val actionKey: String = intent!!.action
+            val actionKey: String = intent.action!!
             if (actionKey.equals(actionDismiss)) {
                 synchronized(actionDismissCallables) {
                     actionDismissCallables.forEach {

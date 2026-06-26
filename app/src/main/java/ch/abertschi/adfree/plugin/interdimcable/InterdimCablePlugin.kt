@@ -7,6 +7,7 @@
 package ch.abertschi.adfree.plugin.interdimcable
 
 import android.content.Context
+import android.util.Log
 import android.view.View
 import ch.abertschi.adfree.AudioController
 import ch.abertschi.adfree.NotificationChannel
@@ -18,9 +19,6 @@ import ch.abertschi.adfree.plugin.PluginActivityAction
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.error
-import org.jetbrains.anko.info
 import java.util.concurrent.TimeUnit
 
 /**
@@ -29,7 +27,9 @@ import java.util.concurrent.TimeUnit
 class InterdimCablePlugin(val prefs: PreferencesFactory,
                           val audioController: AudioController,
                           val globalContext: Context,
-                          val notificationChannel: NotificationChannel) : AdPlugin, AnkoLogger {
+                          val notificationChannel: NotificationChannel) : AdPlugin {
+
+    private val TAG: String = "InterdimCablePlugin"
 
     private val GITHUB_RAW_SUFFIX: String = "?raw=true"
     private val AD_FREE_RESOURCE_ADRESS: String
@@ -39,7 +39,7 @@ class InterdimCablePlugin(val prefs: PreferencesFactory,
     private val PLUGIN_FILE_PATH: String = BASE_URL + "plugin.yaml" + GITHUB_RAW_SUFFIX
 
     private var configFactory: YamlRemoteConfigFactory<InterdimCableModel> =
-            YamlRemoteConfigFactory(PLUGIN_FILE_PATH, InterdimCableModel::class.java, prefs)
+            YamlRemoteConfigFactory(PLUGIN_FILE_PATH, InterdimCableModel::class.java, prefs.getPreferences())
 
     private var model: InterdimCableModel? = null
     private var interdimCableView: InterdimCableView? = InterdimCableView(globalContext)
@@ -53,7 +53,7 @@ class InterdimCablePlugin(val prefs: PreferencesFactory,
 
     override fun hasSettingsView(): Boolean = true
 
-    override fun settingsView(c: Context, actions: PluginActivityAction): View? {
+    override fun settingsView(context: Context, activityActions: PluginActivityAction): View? {
         return interdimCableView?.onCreate(this)
     }
 
@@ -79,12 +79,12 @@ class InterdimCablePlugin(val prefs: PreferencesFactory,
                 .subscribe(
                         { pair ->
                             model = pair.first
-                            info("Interdimensional cable plugin settings updated")
-                            info("downloaded meta data for " + model?.channels?.size + " channels")
+                            Log.i(TAG, "Interdimensional cable plugin settings updated")
+                            Log.i(TAG, "downloaded meta data for " + model?.channels?.size + " channels")
                             configFactory.storeToLocalStore(model!!)
                             callback?.invoke()
                         },
-                        { error ->
+                        { _ ->
                             interdimCableView?.showInternetError()
                             callback?.invoke()
                         }
@@ -140,7 +140,7 @@ class InterdimCablePlugin(val prefs: PreferencesFactory,
             function()
         } catch (e: Throwable) {
             interdimCableView?.showAudioError()
-            error(e)
+            Log.e(TAG, e.toString())
         }
     }
 }

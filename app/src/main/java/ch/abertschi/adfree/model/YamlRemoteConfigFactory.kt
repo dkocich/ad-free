@@ -1,69 +1,59 @@
-/*
- * Ad Free
- * Copyright (c) 2017 by abertschi, www.abertschi.ch
- * See the file "LICENSE" for the full license governing this code.
- */
-
 package ch.abertschi.adfree.model
 
-import com.github.kittinunf.fuel.httpGet
+import android.content.SharedPreferences
+import com.github.kittinunf.fuel.Fuel
+import com.thoughtworks.xstream.XStream
+import com.thoughtworks.xstream.security.AnyTypePermission
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import org.yaml.snakeyaml.Yaml
 
-/**
- * Created by abertschi on 26.04.17.
- */
-class YamlRemoteConfigFactory<MODEL>(val downloadUrl: String,
-                                     val modelType: Class<MODEL>,
-                                     val preferences: PreferencesFactory) {
+class YamlRemoteConfigFactory<T> constructor(val url: String,
+                                              val type: Class<T>,
+                                              val preferences: SharedPreferences) {
 
-    private val SETTING_PERSISTENCE_LOCAL_KEY: String = "YAML_CONFIG_FACTORY_PERSISTENCE_"
+    private val KEY_CACHED_CONFIG = "cached_config"
+    private var _localStore: T? = null
 
-    init {
-        SETTING_PERSISTENCE_LOCAL_KEY + modelType.canonicalName
+    // XStream 1.4.18+ blocks deserialization unless types are allowlisted.
+    // This cache is data the app itself wrote, so allow all types.
+    private fun xstream(): XStream {
+        val x = XStream()
+        x.addPermission(AnyTypePermission.ANY)
+        return x
     }
 
-    fun downloadObservable(): io.reactivex.Observable<Pair<MODEL, String>>
-            = Observable.create<Pair<MODEL, String>> { source ->
-
-        downloadUrl.httpGet().responseString { _, _, result ->
-            val (data, error) = result
-            if (error == null) {
-                try {
-                    val yaml = createYamlInstance()
-                    val model = yaml.loadAs(data, modelType)
-                    source.onNext(Pair<MODEL, String>(model, data ?: ""))
-                } catch (exception: Exception) {
-                    source.onError(exception)
+    fun downloadObservable(): Observable<Pair<T, String>> {
+        return Observable.create<Pair<T, String>> { source ->
+            Fuel.get(url).responseString { _, _, result ->
+                val (data, error) = result
+                if (error == null) {
+                    val config = Yaml().loadAs(data, type)
+                    val pair = Pair(config, data!!)
+                    source.onNext(pair)
+                } else {
+                    source.onError(error.exception)
                 }
-            } else {
-                source.onError(error)
             }
-            source.onComplete()
-        }
-    }.observeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
+        }.subscribeOn(Schedulers.io())
+    }
 
-    fun loadFromLocalStore(defaultReturn: MODEL? = null): MODEL? {
-        val yaml = createYamlInstance()
-        val content = preferences.getPreferences().getString(SETTING_PERSISTENCE_LOCAL_KEY, null)
-        if (content == null) {
-            return defaultReturn
+    fun loadFromLocalStore(): T? {
+        if (_localStore != null) {
+            return _localStore
+        }
+        val data = preferences.getString(KEY_CACHED_CONFIG, "")
+        if (data != "") {
+            _localStore = xstream().fromXML(data) as T
+            return _localStore
         } else {
-            return yaml.loadAs(content, modelType)
+            return null
         }
     }
 
-    fun storeToLocalStore(model: MODEL) {
-        val yaml = createYamlInstance()
-        preferences.getPreferences()
-                .edit().putString(SETTING_PERSISTENCE_LOCAL_KEY, yaml.dump(model)).commit()
-    }
-
-    private fun createYamlInstance(): org.yaml.snakeyaml.Yaml {
-        val representer = org.yaml.snakeyaml.representer.Representer()
-        representer.propertyUtils.setSkipMissingProperties(true)
-        return org.yaml.snakeyaml.Yaml(representer)
+    fun storeToLocalStore(config: T): T {
+        val data = xstream().toXML(config)
+        preferences.edit().putString(KEY_CACHED_CONFIG, data).commit()
+        return config
     }
 }

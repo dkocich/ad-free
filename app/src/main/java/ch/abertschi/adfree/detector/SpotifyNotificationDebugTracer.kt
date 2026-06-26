@@ -1,14 +1,8 @@
 package ch.abertschi.adfree.detector
 
-import android.service.notification.StatusBarNotification
-import com.thoughtworks.xstream.XStream
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.info
-import org.jetbrains.anko.warn
 import java.io.File
-import java.io.FileOutputStream
 
-class SpotifyNotificationDebugTracer(storageFolder: File?) : AdDetectable, AnkoLogger,
+class SpotifyNotificationDebugTracer(storageFolder: File?) : AdDetectable,
     AbstractDebugTracer(storageFolder) {
 
     val SPOTIFY_PACKAGE = "com.spotify"
@@ -22,4 +16,8 @@ class SpotifyNotificationDebugTracer(storageFolder: File?) : AdDetectable, AnkoL
         category = "Developer",
         debugOnly = true
     )
+
+    override fun canHandle(p: AdPayload): Boolean {
+        return super.canHandle(p)
+    }
 }

@@ -7,14 +7,13 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
-import android.service.notification.ConditionProviderService
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.warn
-import android.support.v4.app.NotificationManagerCompat
-import org.jetbrains.anko.info
+import android.util.Log
+import androidx.core.app.NotificationManagerCompat
 
 
-class NotificationStatusManager(val context: Context) : AnkoLogger {
+class NotificationStatusManager(val context: Context) {
+
+    private val TAG: String = "NotificationStatusManager"
 
     private val TIMER_INTERVAL_MS: Long = 60 * 1000
 
@@ -27,7 +26,7 @@ class NotificationStatusManager(val context: Context) : AnkoLogger {
     }
 
     fun notifyStatusChanged(s: ListenerStatus) {
-        info { "Notification Listener Status Changed: $s" }
+        Log.i(TAG, "Notification Listener Status Changed: $s")
         lastStatus = s
         observers.forEach { it.onStatusChanged(s) }
     }
@@ -40,7 +39,7 @@ class NotificationStatusManager(val context: Context) : AnkoLogger {
             lastStatus = ListenerStatus.DISCONNECTED
         }
 
-        info { "Notification Listener Status : ${lastStatus}" }
+        Log.i(TAG, "Notification Listener Status : ${lastStatus}")
         return lastStatus
     }
 
@@ -51,29 +50,28 @@ class NotificationStatusManager(val context: Context) : AnkoLogger {
         val alarm = this.context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         alarm.cancel(pendingintent)
         alarm.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), TIMER_INTERVAL_MS, pendingintent)
-        info { "Setting wakeup with alarmmanager every $TIMER_INTERVAL_MS ms" }
+        Log.i(TAG, "Setting wakeup with alarmmanager every $TIMER_INTERVAL_MS ms")
     }
 
 
     fun restartNotificationListener() {
-        info { "restarting notification listener" }
+        Log.i(TAG, "restarting notification listener")
         restartComponentService()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             val componentName = ComponentName(context.applicationContext,
-                    NotificationsListeners::class.java!!)
+                    NotificationsListeners::class.java)
 
-            ConditionProviderService.requestRebind(componentName)
         } else {
-            warn { "restart notification listener is not supported for current v. of android" }
+            Log.w(TAG, "restart notification listener is not supported for current v. of android")
         }
 
     }
 
     private fun restartComponentService() {
         val pm = context.packageManager
-        pm.setComponentEnabledSetting(ComponentName(this.context, NotificationsListeners::class.java!!),
+        pm.setComponentEnabledSetting(ComponentName(this.context, NotificationsListeners::class.java),
                 PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP)
-        pm.setComponentEnabledSetting(ComponentName(this.context, NotificationsListeners::class.java!!),
+        pm.setComponentEnabledSetting(ComponentName(this.context, NotificationsListeners::class.java),
                 PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP)
     }
 }

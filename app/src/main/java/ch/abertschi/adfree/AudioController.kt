@@ -6,32 +6,30 @@
 
 package ch.abertschi.adfree
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.media.AudioManager
+import android.util.Log
 import ch.abertschi.adfree.model.PreferencesFactory
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
-import io.reactivex.schedulers.Schedulers.*
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.debug
-import org.jetbrains.anko.info
+import io.reactivex.schedulers.Schedulers.io
 import java.util.concurrent.TimeUnit
 
 /**
  * Created by abertschi on 16.04.17.
  */
-class AudioController(val context: Context, val prefs: PreferencesFactory) : AnkoLogger {
+class AudioController(val context: Context, val prefs: PreferencesFactory) {
 
     private var musicStreamVolume = 0
     private var musicStreamIsMuted = false
 
+    private val TAG = "AudioController"
+
     fun isMusicStreamMuted(): Boolean = musicStreamIsMuted
 
     fun muteMusicStream() {
-        debug("current volume $musicStreamVolume")
-        info("muting audio")
+        Log.d(TAG, "current volume $musicStreamVolume")
+        Log.i(TAG, "muting audio")
 
         if (musicStreamIsMuted) {
             return
@@ -46,7 +44,7 @@ class AudioController(val context: Context, val prefs: PreferencesFactory) : Ank
 
 
     fun unmuteMusicStream() {
-        info("Unmuting audio....")
+        Log.i(TAG, "Unmuting audio....")
         if (!musicStreamIsMuted) {
             return
         }
@@ -65,7 +63,7 @@ class AudioController(val context: Context, val prefs: PreferencesFactory) : Ank
                 .observeOn(AndroidSchedulers.mainThread()).subscribe {
             val volume = am.getStreamVolume(AudioManager.STREAM_VOICE_CALL)
             prefs.storeVoiceCallAudioVolume(volume)
-            info("Storing audio volume with value $volume")
+            Log.i(TAG, "Storing audio volume with value $volume")
         }
     }
 
@@ -78,7 +76,7 @@ class AudioController(val context: Context, val prefs: PreferencesFactory) : Ank
                 .subscribeOn(io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-                    info { counter }
+                    Log.i(TAG, "$counter")
                     if (counter < times - 1) {
                         am.adjustStreamVolume(AudioManager.STREAM_VOICE_CALL, AudioManager.ADJUST_LOWER, 0)
                     } else {
@@ -89,4 +87,3 @@ class AudioController(val context: Context, val prefs: PreferencesFactory) : Ank
                 }
     }
 }
-

@@ -8,25 +8,24 @@ package ch.abertschi.adfree.view.home
 
 import android.content.Intent
 import android.graphics.Typeface
+import android.os.Build
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.fragment.app.Fragment
 import ch.abertschi.adfree.R
 import ch.abertschi.adfree.di.HomeModul
 import ch.abertschi.adfree.presenter.HomePresenter
 import ch.abertschi.adfree.view.ViewSettings
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.onClick
 
 /**
  * Created by abertschi on 15.04.17.
  */
 
-class HomeActivity() : Fragment(), HomeView, AnkoLogger {
+class HomeActivity() : Fragment(), HomeView {
     private lateinit var typeFace: Typeface
     private lateinit var enjoySloganText: TextView
     private lateinit var homePresenter: HomePresenter
@@ -34,11 +33,11 @@ class HomeActivity() : Fragment(), HomeView, AnkoLogger {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        return inflater?.inflate(R.layout.home_view, container, false)
+        return inflater.inflate(R.layout.home_view, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+        super.onViewCreated(view, savedInstanceState)
 
         homePresenter = HomeModul(this.activity!!, this).provideSettingsPresenter()
         
@@ -49,7 +48,7 @@ class HomeActivity() : Fragment(), HomeView, AnkoLogger {
         updateMessageInfo =
                 view.findViewById(R.id.version_update_reminder) as TextView
 
-        view.findViewById<TextView>(R.id.troubleshooting).onClick {
+        view.findViewById<TextView>(R.id.troubleshooting).setOnClickListener {
             homePresenter.onTroubleshooting()
         }
 
@@ -71,7 +70,7 @@ class HomeActivity() : Fragment(), HomeView, AnkoLogger {
     override fun showUpdateMessage(show: Boolean) {
         if (show ){
             updateMessageInfo.visibility = View.VISIBLE
-            updateMessageInfo.onClick {
+            updateMessageInfo.setOnClickListener {
                 homePresenter.onUpdateMessageClicked()
             }
         } else {
@@ -86,7 +85,7 @@ class HomeActivity() : Fragment(), HomeView, AnkoLogger {
     }
 
     override fun showPermissionRequired() {
-        val text = "touch here to grant permission"
+        val text = getString(R.string.slogan_grant_permission)
         setSloganText(text)
         enjoySloganText.setOnClickListener {
             showNotificationPermissionSettings()
@@ -99,11 +98,15 @@ class HomeActivity() : Fragment(), HomeView, AnkoLogger {
 
     private fun setSloganText(text: String) {
         enjoySloganText.typeface = typeFace
-        enjoySloganText.text = Html.fromHtml(text)
+        enjoySloganText.text = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Html.fromHtml(text, Html.FROM_HTML_MODE_LEGACY)
+        } else {
+            Html.fromHtml(text)
+        }
     }
 
     override fun showEnjoyAdFree() {
-        val text = "<font color=#FFFFFF>enjoy</font> your <font color=#FFFFFF>ad-free</font> music experience."
+        val text = getString(R.string.slogan_enjoy)
         setSloganText(text)
         enjoySloganText.setOnClickListener(null)
     }

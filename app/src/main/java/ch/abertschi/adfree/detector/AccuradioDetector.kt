@@ -1,13 +1,12 @@
 package ch.abertschi.adfree.detector
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.widget.RemoteViews
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.info
-import org.jetbrains.anko.warn
-import kotlin.reflect.jvm.internal.impl.load.kotlin.JvmType
 
-class AccuradioDetector : AdDetectable, AnkoLogger, AbstractNotificationDetector() {
+class AccuradioDetector : AdDetectable, AbstractNotificationDetector() {
+
+    private val TAG: String = "AccuradioDetector"
 
     override fun getPackageName(): String {
         return "com.slipstream.accuradio"
@@ -21,13 +20,13 @@ class AccuradioDetector : AdDetectable, AnkoLogger, AbstractNotificationDetector
     )
 
 
-    private fun extractObject(target: JvmType.Object, declaredField: String): Any? {
+    private fun extractObject(target: Any, declaredField: String): Any? {
         try {
             val f = target.javaClass.getDeclaredField(declaredField) //NoSuchFieldException
             f.isAccessible = true
             return f.get(target)
         } catch (e: Exception) {
-            warn("Can not access $declaredField with reflection, $e")
+            Log.w(TAG, "Can not access $declaredField with reflection, $e")
         }
         return null
     }
@@ -39,22 +38,10 @@ class AccuradioDetector : AdDetectable, AnkoLogger, AbstractNotificationDetector
             f.isAccessible = true
             return f.get(views) as List<*>
         } catch (e: Exception) {
-            warn("Can not access mactions with reflection, $e")
+            Log.w(TAG, "Can not access mactions with reflection, $e")
         }
         return null
     }
-
-    private fun extractObject(target: Any, declaredField: String): Any? {
-        return try {
-            val f = target.javaClass.getDeclaredField(declaredField) //NoSuchFieldException
-            f.isAccessible = true
-            return f.get(target)
-        } catch (e: Exception) {
-            warn("Can not access $declaredField with reflection, $e")
-            null
-        }
-    }
-
 
     private fun inspectContentViews(contentView: RemoteViews?): Boolean {
         try {
@@ -76,14 +63,14 @@ class AccuradioDetector : AdDetectable, AnkoLogger, AbstractNotificationDetector
                         if (value !is CharSequence) {
                             continue
                         }
-                        if (value.toString().trim().toLowerCase().contains("music will resume shortly")) {
+                        if (value.toString().trim().lowercase().contains("music will resume shortly")) {
                             return true
                         }
                     }
                 }
             }
         } catch (e: Exception) {
-            warn(e)
+            Log.w(TAG, e)
         }
         return false
     }
@@ -92,13 +79,16 @@ class AccuradioDetector : AdDetectable, AnkoLogger, AbstractNotificationDetector
         // XXX: Support old deprecated fields
         val contentView = payload.statusbarNotification.notification?.contentView
         val bigView = payload.statusbarNotification.notification?.bigContentView
-        val tickerView = payload.statusbarNotification.notification?.tickerView
 
-        for (v in listOf(contentView, bigView, tickerView)) {
+        for (v in listOf(contentView, bigView)) {
             if (inspectContentViews(v)) {
                 return true;
             }
         }
         return false;
+    }
+
+    override fun canHandle(p: AdPayload): Boolean {
+        return super.canHandle(p)
     }
 }

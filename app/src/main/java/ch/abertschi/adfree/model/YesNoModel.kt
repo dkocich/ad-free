@@ -7,7 +7,6 @@
 package ch.abertschi.adfree.model
 
 import android.content.Context
-import org.jetbrains.anko.AnkoLogger
 import org.json.JSONArray
 import java.io.IOException
 import java.nio.charset.Charset
@@ -17,7 +16,7 @@ import java.nio.charset.Charset
  * Created by abertschi on 01.09.17.
  */
 @Deprecated("no longer needed")
-class YesNoModel(val context: Context) : AnkoLogger {
+class YesNoModel(val context: Context) {
 
     var yes: List<String> = listOf()
     var no: List<String> = listOf()
@@ -36,7 +35,6 @@ class YesNoModel(val context: Context) : AnkoLogger {
     }
 
     fun loadJSONFromAsset(assetLocation: String): List<String> {
-        var json: String? = null
         try {
 
             val stream = context.assets.open(assetLocation)
@@ -44,7 +42,7 @@ class YesNoModel(val context: Context) : AnkoLogger {
             val buffer = ByteArray(size)
             stream.read(buffer)
             stream.close()
-            json = buffer.toString(Charset.defaultCharset())
+            val json = buffer.toString(Charset.defaultCharset())
             val words = JSONArray(json)
             var result = ArrayList<String>()
             (0 until words.length()).mapTo(result) { words[it] as String }

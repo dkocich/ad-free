@@ -8,29 +8,29 @@ package ch.abertschi.adfree.model
 
 import android.content.Context
 import android.content.SharedPreferences
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.info
+import android.util.Log
 
 /**
  * Created by abertschi on 15.04.17.
  */
-open class TrackRepository: AnkoLogger {
+open class TrackRepository {
 
+    private val TAG: String = "TrackRepository"
     private val context: Context
     private val TRACKS: String = "tracks"
     private var sharedPreferences: SharedPreferences
 
-    constructor(context: Context, sharedPreferences: PreferencesFactory) {
+    constructor(context: Context, sharedPreferences: SharedPreferences) {
         this.context = context
-        this.sharedPreferences = sharedPreferences.getPreferences()
+        this.sharedPreferences = sharedPreferences
     }
 
     private fun getTracks(): MutableSet<String> {
-        return sharedPreferences.getStringSet(TRACKS, HashSet<String>())
+        return sharedPreferences.getStringSet(TRACKS, HashSet<String>())!!
     }
 
     open fun addTrack(content: String) {
-        info("storing track: " + content)
+        Log.i(TAG, "storing track: " + content)
 
         val tracks = getTracks()
         tracks.add(content)

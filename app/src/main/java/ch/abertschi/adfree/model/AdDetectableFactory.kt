@@ -1,80 +1,62 @@
 package ch.abertschi.adfree.model
 
 import android.content.Context
-import ch.abertschi.adfree.AdFreeApplication
 import ch.abertschi.adfree.detector.*
 
-class AdDetectableFactory(
-    var context: Context,
-    val prefs: PreferencesFactory
-) {
+class AdDetectableFactory(val context: Context, val prefs: PreferencesFactory) {
 
-    private var enableMap = HashMap<AdDetectable, Boolean>()
-
-    private var isGloballyEnabled = true
-
-    private var adDetectors: List<AdDetectable> = listOf(
-        NotificationActionDetector(),
-        SpotifyTitleDetector(TrackRepository(this.context, prefs)),
-        NotificationBundleAndroidTextDetector(),
-        MiuiNotificationDetector(),
-        ScDetector(),
-        DummyGlobal(),
-        DummySpotifyDetector(),
-        SpotifyNotificationDebugTracer(context.getExternalFilesDir(null)),
-        ScNotificationDebugTracer(context.getExternalFilesDir(null)),
-        DeezerDebugTracer(context.getExternalFilesDir(null)),
-        DeezerTextDetector(),
-        AccuRadioDebugTracer(context.getExternalFilesDir(null)),
-        AccuradioDetector(),
-        TidalDebugTracer(context.getExternalFilesDir(null)),
-        SpotifyLiteDebugTracer(context.getExternalFilesDir(null)),
-        UserDefinedTextDetector((context.applicationContext as AdFreeApplication).textRepository),
-        SpLiteTextDetector(),
-        SpLiteTextEnglishDetector(),
-        BestEffortTextDetector()
-    )
+    private var detectors: List<AdDetectable>
 
     init {
-        loadMeta()
+        this.detectors = listOf(
+            BestEffortTextDetector(),
+            ch.abertschi.adfree.detector.NotificationActionDetector(),
+            ch.abertschi.adfree.detector.MiuiNotificationDetector(),
+            ch.abertschi.adfree.detector.SpotifyTitleDetector(TrackRepository(context, prefs.getPreferences())),
+            ch.abertschi.adfree.detector.UserDefinedTextDetector(TextRepository(context, prefs.getPreferences())),
+            ch.abertschi.adfree.detector.AccuradioDetector(),
+            ch.abertschi.adfree.detector.ScDetector(),
+            ch.abertschi.adfree.detector.DeezerTextDetector(),
+            ch.abertschi.adfree.detector.SpLiteTextDetector(),
+            ch.abertschi.adfree.detector.SpLiteTextEnglishDetector(),
+
+            ch.abertschi.adfree.detector.SpotifyNotificationDebugTracer(context.getExternalFilesDir(null)),
+            ch.abertschi.adfree.detector.ScNotificationDebugTracer(context.getExternalFilesDir(null)),
+            ch.abertschi.adfree.detector.DeezerDebugTracer(context.getExternalFilesDir(null)),
+            ch.abertschi.adfree.detector.SpotifyLiteDebugTracer(context.getExternalFilesDir(null)),
+            ch.abertschi.adfree.detector.TidalDebugTracer(context.getExternalFilesDir(null)),
+            ch.abertschi.adfree.detector.AccuRadioDebugTracer(context.getExternalFilesDir(null)),
+
+            ch.abertschi.adfree.detector.DummySpotifyDetector(),
+            ch.abertschi.adfree.detector.DummyGlobal()
+        )
     }
 
-    private fun loadMeta() {
-        isGloballyEnabled = prefs.isBlockingEnabled()
-        adDetectors.forEach { enableMap[it] = prefs.isAdDetectableEnabled(it) }
-    }
+    fun getEnabledDetectors(): List<AdDetectable> = detectors.filter { isEnabled(it) }
 
-    fun persistMeta() {
-        enableMap.entries.forEach { prefs.saveAdDetectableEnable(it.value, it.key) }
-    }
+    fun getVisibleDetectors(): List<AdDetectable> = detectors.filter { !it.getMeta().debugOnly }
 
-    fun isAdfreeEnabled() = isGloballyEnabled
+    fun getAllDetectors(): List<AdDetectable> = detectors
 
-    fun setAdfreeEnabled(e: Boolean) {
-        isGloballyEnabled = e
-        prefs.setBlockingEnabled(e)
-    }
+    fun getCategories(): List<String> = detectors.map { it.getMeta().category }.distinct()
 
-    fun isEnabled(d: AdDetectable): Boolean {
-        return enableMap[d] ?: true
-    }
-
-    fun setEnable(enable: Boolean, d: AdDetectable) {
-        enableMap[d] = enable
-    }
-
-    fun getEnabledDetectors() = adDetectors.filter { isEnabled(it) }
-
-    fun getAllDetectors() = adDetectors
-
-    fun getDetectorsForCategory(c: String) =
-        getVisibleDetectors().filter { it.getMeta().category == c }
-
-    fun getVisibleDetectors() =
+    fun getVisibleCategories(): List<String> {
+        var visible = getVisibleDetectors().map { it.getMeta().category }.distinct().toMutableList()
         if (prefs.isDeveloperModeEnabled()) {
-            getAllDetectors()
-        } else adDetectors.filter { !it.getMeta().debugOnly }
+            visible.add("Developer")
+        }
+        return visible
+    }
 
-    fun getVisibleCategories() =
-        getVisibleDetectors().map { it.getMeta().category }.toHashSet().toList()
+    fun getDetectorsForCategory(category: String) = detectors.filter { it.getMeta().category == category }
+
+    fun isEnabled(d: AdDetectable): Boolean = prefs.isAdDetectableEnabled(d)
+
+    fun setEnable(e: Boolean, d: AdDetectable) = prefs.saveAdDetectableEnable(e, d)
+
+    fun isAdfreeEnabled(): Boolean = prefs.isBlockingEnabled()
+
+    fun setAdfreeEnabled(e: Boolean) = prefs.setBlockingEnabled(e)
+
+    fun persistMeta() = prefs.setBlockingEnabled(prefs.isBlockingEnabled())
 }

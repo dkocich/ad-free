@@ -3,17 +3,18 @@ package ch.abertschi.adfree
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.info
+import android.util.Log
 
-class StartOnBootListener: BroadcastReceiver(), AnkoLogger {
+class StartOnBootListener: BroadcastReceiver() {
+
+    private val TAG = "StartOnBootListener"
 
     override fun onReceive(context: Context?, intent: Intent?) {
-        info { "launching ad-free on boot. Hello world" }
+        Log.i(TAG, "launching ad-free on boot. Hello world")
 
         val app = context?.applicationContext as AdFreeApplication
         // launching ad-free application class on boot to initialize ad-free
         // see AdFreeApplication
-        info { app }
+        Log.i(TAG, "$app")
     }
 }

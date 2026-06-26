@@ -6,41 +6,37 @@
 
 package ch.abertschi.adfree.plugin.localmusic
 
+import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build.VERSION
+import android.provider.DocumentsContract
+import android.util.Log
 import android.view.View
+import androidx.core.content.ContextCompat
 import ch.abertschi.adfree.AdFreeApplication
 import ch.abertschi.adfree.AudioController
 import ch.abertschi.adfree.model.PreferencesFactory
-import ch.abertschi.adfree.model.YesNoModel
 import ch.abertschi.adfree.plugin.AdPlugin
 import ch.abertschi.adfree.plugin.AudioPlayer
 import ch.abertschi.adfree.plugin.PluginActivityAction
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.error
-import org.jetbrains.anko.info
 import java.io.File
 import java.util.*
 import java.util.concurrent.TimeUnit
-import android.provider.DocumentsContract
-import java.lang.Exception
-import android.Manifest.permission.READ_EXTERNAL_STORAGE
-import android.content.pm.PackageManager
-import android.os.Build.VERSION
-import android.support.v4.content.ContextCompat.checkSelfPermission
-
 
 /**
  * Created by abertschi on 01.05.17.
  */
 class LocalMusicPlugin(val context: Context,
                        val prefs: PreferencesFactory,
-                       val audioController: AudioController,
-                       val yesNoModel: YesNoModel) : AdPlugin, AnkoLogger {
+                       val audioController: AudioController) : AdPlugin {
+
+    private val TAG: String = "LocalMusicPlugin"
 
     private val supportedFileExt = listOf(".mp3", ".wav", ".m4a")
     private var view: LocalMusicView? = null
@@ -52,8 +48,8 @@ class LocalMusicPlugin(val context: Context,
 
     override fun hasSettingsView(): Boolean = true
 
-    override fun settingsView(context: Context, action: PluginActivityAction): View? {
-        view = view ?: LocalMusicView(context, action)
+    override fun settingsView(context: Context, activityActions: PluginActivityAction): View? {
+        view = view ?: LocalMusicView(context, activityActions)
         val settingsView = view!!.onCreate(this)
         view?.showLoopEnabled(prefs.getLoopMusicPlayback())
         view?.showPlayUntilEndEnabled(prefs.getPlayUntilEnd())
@@ -64,10 +60,10 @@ class LocalMusicPlugin(val context: Context,
 
     override fun play() {
         val file = getRandomTrackfromUri(prefs.getLocalMusicDirectory())
-        info { file }
+        Log.i(TAG, "$file")
         if (file == null) view?.showNoAudioTracksFoundMessage()
         else {
-            info { "playing " + file.absolutePath }
+            Log.i(TAG, "playing " + file.absolutePath)
             val ad = context.applicationContext as AdFreeApplication
             val name = file.absolutePath.split("/").last()
             runAndCatchException {
@@ -126,7 +122,7 @@ class LocalMusicPlugin(val context: Context,
     override fun title(): String = "local music"
 
     private fun getRandomTrackfromUri(path: String): File? {
-        info { "choosing random track in $path" }
+        Log.i(TAG, "choosing random track in $path")
         val musicDir = File(path)
         val allFiles = ArrayList<File>()
         val dirs = LinkedList<File>()
@@ -164,8 +160,8 @@ class LocalMusicPlugin(val context: Context,
 
     fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == PICK_DIRECTORY && resultCode == Activity.RESULT_OK) {
-            val uri = data?.getData()
-            val docUri = DocumentsContract.buildDocumentUriUsingTree(uri,
+            val uri = data?.data
+            val docUri = DocumentsContract.buildDocumentUriUsingTree(uri!!,
                     DocumentsContract.getTreeDocumentId(uri))
 
             var path: String? = null
@@ -177,7 +173,7 @@ class LocalMusicPlugin(val context: Context,
             if (path != null && File(path).exists()) {
                 view?.showAudioDirectoryPath(path)
                 prefs.setLocalMusicDirectory(path)
-                info { "changing directory to ${prefs.getLocalMusicDirectory()}" }
+                Log.i(TAG, "changing directory to ${prefs.getLocalMusicDirectory()}")
             } else {
                 view?.showErrorInChoosingDirectory()
             }
@@ -189,7 +185,7 @@ class LocalMusicPlugin(val context: Context,
             function()
         } catch (e: Throwable) {
             view?.showAudioError()
-            error(e)
+            Log.e(TAG, e.toString())
         }
     }
 
@@ -227,15 +223,15 @@ class LocalMusicPlugin(val context: Context,
 
     private fun hasStoragePermissions(): Boolean {
         return if (VERSION.SDK_INT >= 23) {
-            if (checkSelfPermission(context, READ_EXTERNAL_STORAGE)
+            if (ContextCompat.checkSelfPermission(context, READ_EXTERNAL_STORAGE)
                     == PackageManager.PERMISSION_GRANTED) {
                 true
             } else {
-                info("Permission is revoked")
+                Log.i(TAG, "Permission is revoked")
                 false
             }
         } else {
-            info("Permission is granted1")
+            Log.i(TAG, "Permission is granted1")
             true
         }
     }

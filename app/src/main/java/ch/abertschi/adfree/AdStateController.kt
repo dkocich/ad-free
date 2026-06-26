@@ -6,6 +6,7 @@
 
 package ch.abertschi.adfree
 
+import android.util.Log
 import ch.abertschi.adfree.ad.AdEvent
 import ch.abertschi.adfree.ad.AdObservable
 import ch.abertschi.adfree.ad.AdObserver
@@ -16,8 +17,6 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.info
 import java.util.concurrent.TimeUnit
 
 
@@ -29,11 +28,12 @@ class AdStateController(private val audioController: AudioController,
                         private val notificationChannel: NotificationChannel,
                         private val castManager: GoogleCastManager,
                         private val prefs: PreferencesFactory) :
-        AdObserver, AnkoLogger {
+        AdObserver {
 
     private var activeState: EventType? = EventType.NO_AD
     private val timeoutInMs: Long = 120_000
     private var timeoutDisposable: Disposable? = null
+    private val TAG: String = "AdStateController"
 
     override fun onAdEvent(event: AdEvent, observable: AdObservable) {
         if (activeState != EventType.IS_AD && event.eventType == EventType.IS_AD) {
@@ -41,10 +41,10 @@ class AdStateController(private val audioController: AudioController,
             onAd(observable)
         }
         if (activeState != EventType.NO_AD && event.eventType == EventType.NO_AD) {
-            onNoAd(observable)
+            onNoAd()
         }
         if (activeState != EventType.IGNORE_AD && event.eventType == EventType.IGNORE_AD) {
-            onIgnoreAd(observable)
+            onIgnoreAd()
         }
         if (event.eventType == EventType.SHOWCASE) {
             onShowCase(observable)
@@ -67,8 +67,8 @@ class AdStateController(private val audioController: AudioController,
         }
     }
 
-    fun onIgnoreAd(observable: AdObservable) {
-        info { "AdEvent Change: IGNORE_AD" }
+    fun onIgnoreAd() {
+        Log.i(TAG, "AdEvent Change: IGNORE_AD")
         activeState = EventType.IGNORE_AD
 
         adPluginHandler.forceStopPlugin {
@@ -78,8 +78,8 @@ class AdStateController(private val audioController: AudioController,
         }
     }
 
-    fun onNoAd(observable: AdObservable) {
-        info { "AdEvent Change: NO_ADD" }
+    fun onNoAd() {
+        Log.i(TAG, "AdEvent Change: NO_ADD")
         activeState = EventType.NO_AD
 
         val doUnmute = {
@@ -96,14 +96,14 @@ class AdStateController(private val audioController: AudioController,
                     .delay(delay.toLong(), TimeUnit.SECONDS)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread()).map {
-                        info("delaying unmute by ${delay} seconds")
+                        Log.i(TAG, "delaying unmute by ${delay} seconds")
                         doUnmute()
                     }.subscribe()
         } else doUnmute()
     }
 
     fun onAd(observable: AdObservable) {
-        info { "AdEvent Change: IS_ADD" }
+        Log.i(TAG, "AdEvent Change: IS_ADD")
         resetTimeout()
         startTimeout {
             observable.requestNoAd()

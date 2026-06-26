@@ -4,4 +4,88 @@
     <string name="chromecast_subtitle">requires chromecast audio to announce current playback as system notification. see option <u>let others control your cast media</u> in google home app (experimental).</string>
     <string-array name="test">
     </string-array>
+
+    <!-- service / manifest -->
+    <string name="service_label">audio ad blocker</string>
+
+    <!-- home -->
+    <string name="home_troubleshooting">&gt; troubleshooting</string>
+    <string name="home_new_version">&gt; a new version is available</string>
+
+    <!-- crash -->
+    <string name="crash_title">ad-free crashed</string>
+    <string name="crash_send_logs">send logs</string>
+
+    <!-- debug -->
+    <string name="debug_not_working">ad-free not working?</string>
+    <string name="debug_run_spotify">run spotify for a while so ads can appear and be captured.</string>
+    <string name="debug_send_logs">&gt; send logs</string>
+
+    <!-- dialogs -->
+    <string name="delete_confirm">Do you want to delete the entry?</string>
+    <string name="dialog_options">Options</string>
+
+    <!-- audio dir -->
+    <string name="audio_dir_hint">In order to display directories on internal storage, tap at the top right onto the three dots and select internal storage.</string>
+
+    <!-- mod / detectors -->
+    <string name="detectors_choose">detectors find ads. choose what\'s active.</string>
+    <string name="mod_subtitle">change how ad-free internally works</string>
+    <string name="mod_adfree">&gt; ad-free</string>
+    <string name="mod_enabled">enabled</string>
+    <string name="mod_ad_detectors">&gt; ad detectors</string>
+    <string name="mod_choose_detectors">choose active detectors</string>
+    <string name="mod_delay_unmute">&gt; delay unmute</string>
+    <string name="mod_not_delayed">not delayed</string>
+    <string name="mod_always_on">&gt; always-on notification</string>
+    <string name="mod_always_on_desc">prevents ad-free from being killed by Android OS. leave disabled unless you run into issues.</string>
+    <string name="mod_mute_chromecast">&gt; mute chromecast audio</string>
+
+    <!-- delay unmute -->
+    <string name="delay_desc">change how long advertisement stays muted before playback continues</string>
+    <string name="delay_seconds_zero">0 seconds</string>
+
+    <!-- text detector -->
+    <string name="textdet_desc">The text detector flags a notification based on the presence of text.</string>
+    <string name="textdet_add">&gt; Add Entry</string>
+    <string name="textdet_add_desc">Add a new entry for the text detector</string>
+    <string name="textdet_help">&gt; Browse Help</string>
+    <string name="textdet_help_desc">Browse help page for more information</string>
+
+    <!-- plugins -->
+    <string name="cfg_audio_volume">configure audio volume</string>
+    <string name="lm_audio_volume">&gt; audio volume</string>
+    <string name="lm_audio_volume_desc">configure volume of playback</string>
+    <string name="lm_music_dir">&gt; music directory</string>
+    <string name="lm_dir_not_set">directory is not set</string>
+    <string name="lm_play_until_end">&gt; play until end</string>
+    <string name="lm_play_until_end_desc">play music until end before unmuting ad</string>
+    <string name="lm_loop">&gt; loop music</string>
+    <string name="lm_loop_desc">loop music until end of ad</string>
+
+    <!-- settings -->
+    <string name="setting_prompt">what do you want to do while ads are being played</string>
+
+    <!-- toasts -->
+    <string name="toast_choose_email">Choose an Email client</string>
+    <string name="toast_no_crash_report">No crash report available.</string>
+    <string name="toast_choose_directory">Choose directory</string>
+    <string name="toast_storage_needed">Storage permissions needed</string>
+    <string name="toast_dir_error">Whoops, error with chosen directory. Choose a different one. %1$s</string>
+    <string name="toast_no_music">Whoops, no music found in current audio directory</string>
+    <string name="toast_audio_error">Whoops, there was an error with audio</string>
+    <string name="toast_trying_plugin">Trying out plugin</string>
+    <string name="toast_idc_download_error">Unable to download intermidmensional ads. Did you check your internet?</string>
+    <string name="toast_idc_downloading">Downloading track ...</string>
+    <string name="toast_idc_no_channels">No channels to play. You can not listen to interdimensional tv :(</string>
+
+    <!-- notifications -->
+    <string name="notif_channel_name">Ad blocking</string>
+    <string name="notif_channel_desc">Ad blocking notification</string>
+    <string name="notif_enjoy">Enjoy ad-free music</string>
+    <string name="notif_ad_detected">Advertisement detected</string>
+
+    <!-- home slogans (HTML) -->
+    <string name="slogan_grant_permission">touch here to grant permission</string>
+    <string name="slogan_enjoy"><![CDATA[<font color=#FFFFFF>enjoy</font> your <font color=#FFFFFF>ad-free</font> music experience.]]></string>
 </resources>

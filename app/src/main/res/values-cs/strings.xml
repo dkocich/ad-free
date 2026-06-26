@@ -1,0 +1,88 @@
+<resources>
+    <string name="enjoy">užijte si <b>hudbu bez reklam</b></string>
+    <string name="chromecast_subtitle">vyžaduje Chromecast Audio pro oznamování aktuálního přehrávání jako systémové notifikace. viz volba <u>nechat ostatní ovládat vaše média Cast</u> v aplikaci Google Home (experimentální).</string>
+
+    <!-- service / manifest -->
+    <string name="service_label">blokování zvukových reklam</string>
+
+    <!-- home -->
+    <string name="home_troubleshooting">&gt; řešení potíží</string>
+    <string name="home_new_version">&gt; je dostupná nová verze</string>
+
+    <!-- crash -->
+    <string name="crash_title">ad-free spadl</string>
+    <string name="crash_send_logs">odeslat protokoly</string>
+
+    <!-- debug -->
+    <string name="debug_not_working">ad-free nefunguje?</string>
+    <string name="debug_run_spotify">nechte Spotify chvíli běžet, aby se objevily reklamy a daly se zachytit.</string>
+    <string name="debug_send_logs">&gt; odeslat protokoly</string>
+
+    <!-- dialogs -->
+    <string name="delete_confirm">Opravdu chcete položku smazat?</string>
+    <string name="dialog_options">Možnosti</string>
+
+    <!-- audio dir -->
+    <string name="audio_dir_hint">Pro zobrazení složek v interním úložišti klepněte vpravo nahoře na tři tečky a zvolte interní úložiště.</string>
+
+    <!-- mod / detectors -->
+    <string name="detectors_choose">detektory hledají reklamy. zvolte, které jsou aktivní.</string>
+    <string name="mod_subtitle">změňte, jak ad-free funguje uvnitř</string>
+    <string name="mod_adfree">&gt; ad-free</string>
+    <string name="mod_enabled">zapnuto</string>
+    <string name="mod_ad_detectors">&gt; detektory reklam</string>
+    <string name="mod_choose_detectors">zvolte aktivní detektory</string>
+    <string name="mod_delay_unmute">&gt; odložit zrušení ztlumení</string>
+    <string name="mod_not_delayed">bez odkladu</string>
+    <string name="mod_always_on">&gt; trvalá notifikace</string>
+    <string name="mod_always_on_desc">brání systému Android ukončit ad-free. ponechte vypnuté, pokud nemáte potíže.</string>
+    <string name="mod_mute_chromecast">&gt; ztlumit zvuk Chromecastu</string>
+
+    <!-- delay unmute -->
+    <string name="delay_desc">změňte, jak dlouho zůstane reklama ztlumená, než přehrávání pokračuje</string>
+    <string name="delay_seconds_zero">0 sekund</string>
+
+    <!-- text detector -->
+    <string name="textdet_desc">Textový detektor označí notifikaci podle přítomnosti textu.</string>
+    <string name="textdet_add">&gt; Přidat položku</string>
+    <string name="textdet_add_desc">Přidat novou položku pro textový detektor</string>
+    <string name="textdet_help">&gt; Procházet nápovědu</string>
+    <string name="textdet_help_desc">Procházet stránku nápovědy pro více informací</string>
+
+    <!-- plugins -->
+    <string name="cfg_audio_volume">nastavit hlasitost zvuku</string>
+    <string name="lm_audio_volume">&gt; hlasitost zvuku</string>
+    <string name="lm_audio_volume_desc">nastavit hlasitost přehrávání</string>
+    <string name="lm_music_dir">&gt; složka s hudbou</string>
+    <string name="lm_dir_not_set">složka není nastavena</string>
+    <string name="lm_play_until_end">&gt; přehrát do konce</string>
+    <string name="lm_play_until_end_desc">přehrávat hudbu do konce před zrušením ztlumení reklamy</string>
+    <string name="lm_loop">&gt; opakovat hudbu</string>
+    <string name="lm_loop_desc">opakovat hudbu do konce reklamy</string>
+
+    <!-- settings -->
+    <string name="setting_prompt">co chcete dělat během přehrávání reklam</string>
+
+    <!-- toasts -->
+    <string name="toast_choose_email">Vyberte e-mailového klienta</string>
+    <string name="toast_no_crash_report">Žádný protokol o pádu není k dispozici.</string>
+    <string name="toast_choose_directory">Vyberte složku</string>
+    <string name="toast_storage_needed">Jsou potřeba oprávnění k úložišti</string>
+    <string name="toast_dir_error">Chyba se zvolenou složkou. Vyberte jinou. %1$s</string>
+    <string name="toast_no_music">Ve zvolené složce nebyla nalezena žádná hudba</string>
+    <string name="toast_audio_error">Jejda, došlo k chybě se zvukem</string>
+    <string name="toast_trying_plugin">Zkouším plugin</string>
+    <string name="toast_idc_download_error">Nelze stáhnout mezidimenzionální reklamy. Zkontrolovali jste připojení k internetu?</string>
+    <string name="toast_idc_downloading">Stahuji stopu ...</string>
+    <string name="toast_idc_no_channels">Žádné kanály k přehrání. Nemůžete sledovat mezidimenzionální TV :(</string>
+
+    <!-- notifications -->
+    <string name="notif_channel_name">Blokování reklam</string>
+    <string name="notif_channel_desc">Notifikace o blokování reklam</string>
+    <string name="notif_enjoy">Užijte si hudbu bez reklam</string>
+    <string name="notif_ad_detected">Zjištěna reklama</string>
+
+    <!-- home slogans (HTML) -->
+    <string name="slogan_grant_permission">klepnutím sem udělíte oprávnění</string>
+    <string name="slogan_enjoy"><![CDATA[<font color=#FFFFFF>užijte si</font> hudbu <font color=#FFFFFF>bez reklam</font>.]]></string>
+</resources>

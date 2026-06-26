@@ -1,8 +1,7 @@
 package ch.abertschi.adfree.detector
-import org.jetbrains.anko.AnkoLogger
 import java.io.File
 
-class DeezerDebugTracer(storageFolder: File?) : AdDetectable, AnkoLogger,
+class DeezerDebugTracer(storageFolder: File?) : AdDetectable,
 
     AbstractDebugTracer(storageFolder) {
 
@@ -18,4 +17,7 @@ class DeezerDebugTracer(storageFolder: File?) : AdDetectable, AnkoLogger,
         category = "Developer",
         debugOnly = true
     )
+    override fun canHandle(p: AdPayload): Boolean {
+        return super.canHandle(p)
+    }
 }

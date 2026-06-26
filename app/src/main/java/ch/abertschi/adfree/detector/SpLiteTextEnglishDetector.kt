@@ -1,11 +1,6 @@
 package ch.abertschi.adfree.detector
 
-import android.app.Notification
-import android.os.Bundle
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.warn
-
-class SpLiteTextEnglishDetector : AdDetectable, AnkoLogger, SpLiteTextDetector() {
+class SpLiteTextEnglishDetector : AdDetectable, SpLiteTextDetector() {
 
     override fun getPackageName() = "com.spotify.lite"
 
@@ -18,7 +13,7 @@ class SpLiteTextEnglishDetector : AdDetectable, AnkoLogger, SpLiteTextDetector()
         if (!title.second) {
             return false
         }
-        return title.first != null && title.first!!.trim().toLowerCase().contains("advertisement")
+        return title.first != null && title.first!!.trim().lowercase().contains("advertisement")
     }
 
     override fun getMeta(): AdDetectorMeta = AdDetectorMeta(
@@ -27,4 +22,8 @@ class SpLiteTextEnglishDetector : AdDetectable, AnkoLogger, SpLiteTextDetector()
         category = "Spotify Lite",
         debugOnly = false
     )
+
+    override fun canHandle(p: AdPayload): Boolean {
+        return super.canHandle(p)
+    }
 }

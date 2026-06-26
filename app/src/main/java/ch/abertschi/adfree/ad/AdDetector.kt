@@ -6,13 +6,12 @@
 
 package ch.abertschi.adfree.ad
 
+import android.util.Log
 import ch.abertschi.adfree.detector.AdDetectable
 import ch.abertschi.adfree.detector.AdPayload
 import ch.abertschi.adfree.model.AdDetectableFactory
 import ch.abertschi.adfree.model.RemoteManager
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.debug
-import org.jetbrains.anko.info
+
 
 /**
  * Created by abertschi on 13.08.17.
@@ -20,7 +19,9 @@ import org.jetbrains.anko.info
 class AdDetector(
     val detectors: AdDetectableFactory,
     val remoteManager: RemoteManager
-) : AnkoLogger, AdObservable {
+) : AdObservable {
+
+    private val TAG: String = "AdDetector"
 
     private var observers: MutableList<AdObserver> = ArrayList()
 
@@ -33,10 +34,8 @@ class AdDetector(
 
         val activeDetectors = detectors.getEnabledDetectors().filter { it.canHandle(payload) }
         if (activeDetectors.isNotEmpty()) {
-            debug {
-                "detected an ad-free notification with ${activeDetectors.size} " +
-                        "active ad-detectors: $activeDetectors"
-            }
+            Log.d(TAG, "detected an ad-free notification with ${activeDetectors.size} " +
+                        "active ad-detectors: $activeDetectors")
 
             var isMusic = false
             var isAd = false

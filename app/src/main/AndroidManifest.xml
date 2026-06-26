@@ -25,7 +25,7 @@
             android:process=":crashlog"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="stateHidden">
+            android:windowSoftInputMode="stateHidden" android:exported="false">
             <intent-filter>
                 <action android:name="ch.abertschi.adfree.SEND_LOG_CRASH" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -34,7 +34,7 @@
 
         <activity
             android:name=".view.MainActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -74,14 +74,14 @@
 
         <service
             android:name=".NotificationsListeners"
-            android:label="audio ad blocker"
-            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+            android:label="@string/service_label"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE" android:exported="true">
             <intent-filter>
                 <action android:name="android.service.notification.NotificationListenerService"/>
             </intent-filter>
         </service>
 
-        <receiver android:name=".StartOnBootListener"  android:exported="true">
+        <receiver android:name=".StartOnBootListener" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
                 <action android:name="android.intent.action.QUICKBOOT_POWERON"/>

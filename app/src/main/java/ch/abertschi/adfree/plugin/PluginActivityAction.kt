@@ -9,8 +9,6 @@ package ch.abertschi.adfree.plugin
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentActivity
 
 /**
  * Created by abertschi on 30.08.17.

@@ -5,15 +5,16 @@
  */
 package ch.abertschi.adfree.plugin.interdimcable
 
+import android.app.Activity
 import android.content.Context
+import android.os.Build
 import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
 import ch.abertschi.adfree.R
 import ch.abertschi.adfree.view.ViewSettings
-import org.jetbrains.anko.longToast
-import org.jetbrains.anko.runOnUiThread
 
 /**
  * Created by abertschi on 22.04.17.
@@ -27,42 +28,50 @@ class InterdimCableView(val context: Context) {
         viewInstance = inflater.inflate(R.layout.plugin_interdim_cable, null, false)
 
         var text = viewInstance?.findViewById(R.id.plugin_interdim_cable_audio_volume_text) as TextView
-        text?.typeface = ViewSettings.instance(context).typeFace
+        text.typeface = ViewSettings.instance(context).typeFace
         var t = "> configure <font color=#FFFFFF>audio volume</font>"
-        text?.text = Html.fromHtml(t)
+        text.text = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Html.fromHtml(t, Html.FROM_HTML_MODE_LEGACY)
+        } else {
+            Html.fromHtml(t)
+        }
         text.setOnClickListener { presenter.configureAudioVolume() }
 
         var des = viewInstance?.findViewById(R.id.plugin_interdim_cable_description) as TextView
-        des?.typeface = ViewSettings.instance(context).typeFace
+        des.typeface = ViewSettings.instance(context).typeFace
 
         t = "enjoy intergalactic television featured in " +
                 "rick and morty by adult swim"
-        des?.text = Html.fromHtml(t)
+        des.text = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Html.fromHtml(t, Html.FROM_HTML_MODE_LEGACY)
+        } else {
+            Html.fromHtml(t)
+        }
 
         return viewInstance
     }
 
     fun showInternetError() {
-        context.applicationContext.runOnUiThread {
-            longToast("Unable to download intermidmensional ads. Did you check your internet?")
+        (context as Activity).runOnUiThread {
+            Toast.makeText(context, context.getString(R.string.toast_idc_download_error), Toast.LENGTH_LONG).show()
         }
     }
 
     fun showDownloadingTrack() {
-        context.runOnUiThread {
-            longToast("Downloading track ...")
+        (context as Activity).runOnUiThread {
+            Toast.makeText(context, context.getString(R.string.toast_idc_downloading), Toast.LENGTH_LONG).show()
         }
     }
 
     fun showAudioError() {
-        context.runOnUiThread {
-            longToast("Whooops, there was an error with audio")
+        (context as Activity).runOnUiThread {
+            Toast.makeText(context, context.getString(R.string.toast_audio_error), Toast.LENGTH_LONG).show()
         }
     }
 
     fun showNoChannelsError() {
-        context.runOnUiThread {
-            longToast("No channels to play. You can not listen to interdimensional tv :(")
+        (context as Activity).runOnUiThread {
+            Toast.makeText(context, context.getString(R.string.toast_idc_no_channels), Toast.LENGTH_LONG).show()
         }
     }
 }

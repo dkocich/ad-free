@@ -1,10 +1,11 @@
 package ch.abertschi.adfree.view.mod
 
+import android.os.Build
 import android.os.Bundle
-import android.support.v7.app.AlertDialog
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.text.Editable
 import android.text.Html
 import android.text.TextWatcher
@@ -17,10 +18,9 @@ import android.widget.ScrollView
 import android.widget.TextView
 import ch.abertschi.adfree.R
 import ch.abertschi.adfree.model.TextRepositoryData
-import org.jetbrains.anko.*
 
 
-class GenericTextDetectorActivity : AppCompatActivity(), AnkoLogger {
+class GenericTextDetectorActivity : AppCompatActivity() {
     private lateinit var presenter: GenericTextDetectorPresenter
     private lateinit var viewAdapter: DetectorAdapter
 
@@ -30,15 +30,19 @@ class GenericTextDetectorActivity : AppCompatActivity(), AnkoLogger {
         val textView = findViewById<TextView>(R.id.textdetector_activity_title)
         val text =
             "the <font color=#FFFFFF>text detector</font> flags a notification based on the presence of text."
-        textView.text = Html.fromHtml(text)
+        textView.text = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Html.fromHtml(text, Html.FROM_HTML_MODE_LEGACY)
+        } else {
+            Html.fromHtml(text)
+        }
         findViewById<ScrollView>(R.id.mod_text_scroll).scrollTo(0, 0)
 
         presenter = GenericTextDetectorPresenter(this, this)
 
 
-        var viewManager = LinearLayoutManager(this)
+        val viewManager = LinearLayoutManager(this)
         viewAdapter = DetectorAdapter(presenter.getData(), presenter)
-        var recyclerView = findViewById<RecyclerView>(R.id.detector_recycle_view).apply {
+        findViewById<RecyclerView>(R.id.detector_recycle_view).apply {
             layoutManager = viewManager
             adapter = viewAdapter
         }
@@ -59,19 +63,19 @@ class GenericTextDetectorActivity : AppCompatActivity(), AnkoLogger {
     fun showOptionDialog(entry: TextRepositoryData) {
 
         val d = AlertDialog.Builder(this)
-            .setTitle("Options")
+            .setTitle(getString(R.string.dialog_options))
             .setView(LayoutInflater.from(this).inflate(R.layout.delete_dialog, null))
-            .setPositiveButton(android.R.string.yes) { dialog, which ->
+            .setPositiveButton(android.R.string.yes) { _, _ ->
                 presenter.deleteEntry(entry)
             }
-            .setNegativeButton(android.R.string.no) { dialog, which ->
+            .setNegativeButton(android.R.string.no) { dialog, _ ->
                 dialog.dismiss()
             }
             .setOnDismissListener {
                 it.dismiss()
             }
             .create()
-            d.window?.setBackgroundDrawableResource(R.color.colorBackground)
+        d.window?.setBackgroundDrawableResource(R.color.colorBackground)
         d.show()
     }
 
@@ -83,7 +87,7 @@ class GenericTextDetectorActivity : AppCompatActivity(), AnkoLogger {
         private val data: List<TextRepositoryData>,
         private val presenter: GenericTextDetectorPresenter
     ) :
-        RecyclerView.Adapter<DetectorAdapter.MyViewHolder>(), AnkoLogger {
+        RecyclerView.Adapter<DetectorAdapter.MyViewHolder>() {
 
         class MyViewHolder(
             val view: View,
@@ -110,7 +114,7 @@ class GenericTextDetectorActivity : AppCompatActivity(), AnkoLogger {
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
 
             var entry = data[position]
-            holder.more.onClick { presenter.onMoreClicked(entry) }
+            holder.more.setOnClickListener { presenter.onMoreClicked(entry) }
             holder.title.setText(entry.packageName)
             holder.subtitle.setText(entry.content.joinToString(separator = "\n"))
 
@@ -157,4 +161,3 @@ class GenericTextDetectorActivity : AppCompatActivity(), AnkoLogger {
     }
 
 }
-

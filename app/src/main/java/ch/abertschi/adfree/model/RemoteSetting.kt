@@ -6,7 +6,6 @@
 
 package ch.abertschi.adfree.model
 
-import ch.abertschi.adfree.BuildConfig
 import ch.abertschi.adfree.util.Serializer
 
 /**
@@ -27,7 +26,7 @@ class RemoteSetting {
     var messageOnUseContent: String = ""
 
     var enabled: Boolean = true
-    var versionCode: Int = BuildConfig.VERSION_CODE
+    var versionCode: Int = 0
     var versionNotify = false
     var versionUrl: String = ""
 

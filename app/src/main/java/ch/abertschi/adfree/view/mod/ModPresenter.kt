@@ -2,20 +2,17 @@ package ch.abertschi.adfree.view.mod
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
+import ch.abertschi.adfree.*
 import ch.abertschi.adfree.model.AdDetectableFactory
 import ch.abertschi.adfree.model.PreferencesFactory
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.info
-import org.jetbrains.anko.runOnUiThread
-import android.os.AsyncTask
-import android.app.AlarmManager
-import android.app.PendingIntent
-import ch.abertschi.adfree.*
+import java.util.concurrent.Executors
 
 
-class ModPresenter(val view: ModActivity, val prefs: PreferencesFactory) : AnkoLogger,
-        NotificationStatusObserver {
+class ModPresenter(val view: ModActivity, val prefs: PreferencesFactory) :
+    NotificationStatusObserver {
 
+    private val TAG: String = "ModPresenter"
     private lateinit var context: Context
     private lateinit var notificationStatusManager: NotificationStatusManager
     private lateinit var detectorFactory: AdDetectableFactory
@@ -23,8 +20,8 @@ class ModPresenter(val view: ModActivity, val prefs: PreferencesFactory) : AnkoL
 
 
     override fun onStatusChanged(status: ListenerStatus) {
-        context.runOnUiThread {
-            info { "notification listener changed status: $status" }
+        view.runOnUiThread {
+            Log.i(TAG, "notification listener changed status: $status")
             if (status == ListenerStatus.CONNECTED) {
                 view.showNotifiationListenerConnected()
             } else {
@@ -34,7 +31,7 @@ class ModPresenter(val view: ModActivity, val prefs: PreferencesFactory) : AnkoL
     }
 
     fun onCreate(context: Context) {
-        info { "new presenter" }
+        Log.i(TAG, "new presenter")
         this.context = context
         val app = context.applicationContext as AdFreeApplication
         detectorFactory = app.adDetectors
@@ -52,7 +49,7 @@ class ModPresenter(val view: ModActivity, val prefs: PreferencesFactory) : AnkoL
         showDetectorCount()
         showDeveloperMode()
 
-        AsyncTask.execute {
+        Executors.newSingleThreadExecutor().execute {
             onStatusChanged(notificationStatusManager.getStatus())
         }
     }
@@ -69,8 +66,10 @@ class ModPresenter(val view: ModActivity, val prefs: PreferencesFactory) : AnkoL
         val enabled = detectorFactory.getEnabledDetectors().size
         val visible = detectorFactory.getVisibleDetectors().size
         val total = detectorFactory.getAllDetectors().size
-        view.showDetectorCount(enabled,
-                if (enabled <= visible) visible else total)
+        view.showDetectorCount(
+            enabled,
+            if (enabled <= visible) visible else total
+        )
     }
 
     fun onToggleAlwaysOnChanged() {
@@ -80,7 +79,7 @@ class ModPresenter(val view: ModActivity, val prefs: PreferencesFactory) : AnkoL
         notificationStatusManager.restartNotificationListener()
         if (!newVal) {
             (view.applicationContext as AdFreeApplication)
-                    .notificationChannel.hideAlwaysOnNotification()
+                .notificationChannel.hideAlwaysOnNotification()
         }
     }
 

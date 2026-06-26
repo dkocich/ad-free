@@ -2,10 +2,11 @@ package ch.abertschi.adfree.view.mod
 
 import android.content.Intent
 import ch.abertschi.adfree.AdFreeApplication
-import ch.abertschi.adfree.detector.*
-import org.jetbrains.anko.AnkoLogger
+import ch.abertschi.adfree.detector.AbstractDebugTracer
+import ch.abertschi.adfree.detector.AdDetectable
+import ch.abertschi.adfree.detector.UserDefinedTextDetector
 
-class ActiveDetectorPresenter(val view: ActiveDetectorActivity) : AnkoLogger {
+class ActiveDetectorPresenter(val view: ActiveDetectorActivity) {
 
     private val detectorFactory = (view.applicationContext as AdFreeApplication).adDetectors
     private val prefs = (view.applicationContext as AdFreeApplication).prefs

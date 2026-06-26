@@ -7,6 +7,7 @@
 package ch.abertschi.adfree.view.setting
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +16,6 @@ import android.widget.Spinner
 import android.widget.TextView
 import ch.abertschi.adfree.R
 import ch.abertschi.adfree.view.ViewSettings
-import org.jetbrains.anko.AnkoLogger
 
 
 /**
@@ -23,7 +23,9 @@ import org.jetbrains.anko.AnkoLogger
  */
 
 class PluginSpinnerAdapter
-    : ArrayAdapter<String>, AnkoLogger {
+    : ArrayAdapter<String> {
+
+    private val TAG: String = "PluginSpinnerAdapter"
 
     private var objects: Array<String>
     private var spinner: Spinner
@@ -37,14 +39,14 @@ class PluginSpinnerAdapter
 
     override fun getDropDownView(position: Int, convertView: View?,
                                  parent: ViewGroup): View {
-        return getCustomView(position, convertView, parent)
+        return getCustomView(position, parent)
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        return getCustomView(position, convertView, parent)
+        return getCustomView(position, parent)
     }
 
-    fun getCustomView(position: Int, convertView: View?, parent: ViewGroup): View {
+    fun getCustomView(position: Int, parent: ViewGroup): View {
         val inflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val view = inflater.inflate(R.layout.replacer_setting_item, parent, false)
         val textView = view.findViewById(R.id.setting_spinner_item) as TextView
@@ -79,7 +81,7 @@ class PluginSpinnerAdapter
             method.isAccessible = true
             method.invoke(spinner)
         } catch (e: Exception) {
-            error("Can not hide spinner dialog, " + e)
+            Log.e(TAG, "Can not hide spinner dialog, " + e)
         }
     }
 }

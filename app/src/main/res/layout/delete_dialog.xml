@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:paddingLeft="25dp"
-    android:background="#252A2E"
+    android:background="@color/colorBackground"
     android:paddingRight="25dp"
     android:paddingBottom="0dp">
 
@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:inputType="textMultiLine|textNoSuggestions"
-            android:text="Do you want to delete the entry?"
+            android:text="@string/delete_confirm"
             android:textColor="#C4BCAF"
             android:textSize="@dimen/normal_text_small" />
 
